@@ -21,6 +21,7 @@ requires = [
 
 dependency_links = [
     'git+https://github.com/blitzstern5/genesis-blockchain-tools#egg=genesis-blockchain-tools',
+    'git+https://github.com/requests/requests#egg=requests',
 ]
 
 setup(
