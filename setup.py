@@ -16,7 +16,10 @@ requires = [
     'urllib3',
     'PyYAML',
     'genesis-blockchain-tools',
-    #'git+https://github.com/blitzstern5/genesis-blockchain-tools',
+]
+
+dependency_links = [
+    'git+https://github.com/blitzstern5/genesis-blockchain-tools#egg=genesis-blockchain-tools',
 ]
 
 setup(
@@ -37,4 +40,5 @@ setup(
     zip_safe=False,
     test_suite='genesis_blockchain_api_client',
     install_requires=requires,
+    dependency_links=dependency_links,
 )
