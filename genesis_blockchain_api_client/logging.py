@@ -2,7 +2,10 @@ import os
 import logging.config
 
 import json
-import yaml
+try:
+    import yaml
+except ImportError:
+    import ruamel.yaml as yaml
 
 def setup_logging(path='logging.yaml', level=logging.INFO, env_key='LOG_CFG',
                   fmt="yaml"):

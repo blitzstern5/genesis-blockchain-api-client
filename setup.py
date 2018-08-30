@@ -14,7 +14,8 @@ requires = [
     'requests',
     'requests_toolbelt',
     'urllib3',
-    'PyYAML',
+    'ruamel.yaml',
+    #'PyYAML',
     'genesis-blockchain-tools',
 ]
 
