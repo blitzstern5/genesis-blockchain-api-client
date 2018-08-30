@@ -15,7 +15,8 @@ requires = [
     'requests_toolbelt',
     'urllib3',
     'PyYAML',
-    'git+https://github.com/blitzstern5/genesis-blockchain-tools',
+    'genesis-blockchain-tools',
+    #'git+https://github.com/blitzstern5/genesis-blockchain-tools',
 ]
 
 setup(
