@@ -35,8 +35,7 @@ def my_setup():
 def my_teardown():
     pass
 
-@with_setup(my_setup, my_teardown)
-def test_init():
+def create_session(use_backend_version):
     if use_backend_version:
         sess = Session(api_root_url, backend_version=backend_version)
     else:
@@ -46,6 +45,11 @@ def test_init():
                    pub_key_fmt=pub_key_fmt,
                    use_request_id=use_request_id,
                    verify_cert=verify_cert)
+    return sess
+
+@with_setup(my_setup, my_teardown)
+def test_init():
+    sess = create_session(use_backend_version)
     assert sess.api_url == api_root_url
     assert sess.verify_cert == verify_cert
     assert sess.priv_key == None
@@ -62,15 +66,7 @@ def test_init():
 
 @with_setup(my_setup, my_teardown)
 def test_get_uid():
-    if use_backend_version:
-        sess = Session(api_root_url, backend_version=backend_version)
-    else:
-        sess = Session(api_root_url, use_login_prefix=use_login_prefix,
-                   use_signtest=use_signtest,
-                   sign_fmt=sign_fmt,
-                   pub_key_fmt=pub_key_fmt,
-                   use_request_id=use_request_id,
-                   verify_cert=verify_cert)
+    sess = create_session(use_backend_version)
     assert not sess.uid
     assert not sess.token
     sess.get_uid()
@@ -79,15 +75,7 @@ def test_get_uid():
 
 @with_setup(my_setup, my_teardown)
 def test_gen_keypair():
-    if use_backend_version:
-        sess = Session(api_root_url, backend_version=backend_version)
-    else:
-        sess = Session(api_root_url, use_login_prefix=use_login_prefix,
-                   use_signtest=use_signtest,
-                   sign_fmt=sign_fmt,
-                   pub_key_fmt=pub_key_fmt,
-                   use_request_id=use_request_id,
-                   verify_cert=verify_cert)
+    sess = create_session(use_backend_version)
     assert not sess.priv_key
     assert not sess.pub_key
     sess.gen_keypair()
@@ -96,15 +84,7 @@ def test_gen_keypair():
 
 @with_setup(my_setup, my_teardown)
 def test_login():
-    if use_backend_version:
-        sess = Session(api_root_url, backend_version=backend_version)
-    else:
-        sess = Session(api_root_url, use_login_prefix=use_login_prefix,
-                   use_signtest=use_signtest,
-                   sign_fmt=sign_fmt,
-                   pub_key_fmt=pub_key_fmt,
-                   use_request_id=use_request_id,
-                   verify_cert=verify_cert)
+    sess = create_session(use_backend_version)
     assert not sess.uid
     assert not sess.token
     assert not sess.priv_key
@@ -122,15 +102,7 @@ def test_login():
 
 @with_setup(my_setup, my_teardown)
 def test_prepare_tx():
-    if use_backend_version:
-        sess = Session(api_root_url, backend_version=backend_version)
-    else:
-        sess = Session(api_root_url, use_login_prefix=use_login_prefix,
-                   use_signtest=use_signtest,
-                   sign_fmt=sign_fmt,
-                   pub_key_fmt=pub_key_fmt,
-                   use_request_id=use_request_id,
-                   verify_cert=verify_cert)
+    sess = create_session(use_backend_version)
     assert not sess.p_result
     sess.gen_keypair()
     sess.login()
@@ -143,15 +115,7 @@ def test_prepare_tx():
 
 @with_setup(my_setup, my_teardown)
 def test_call_contract():
-    if use_backend_version:
-        sess = Session(api_root_url, backend_version=backend_version)
-    else:
-        sess = Session(api_root_url, use_login_prefix=use_login_prefix,
-                   use_signtest=use_signtest,
-                   sign_fmt=sign_fmt,
-                   pub_key_fmt=pub_key_fmt,
-                   use_request_id=use_request_id,
-                   verify_cert=verify_cert)
+    sess = create_session(use_backend_version)
     assert not sess.c_result
     sess.gen_keypair()
     sess.login()
@@ -161,15 +125,7 @@ def test_call_contract():
 
 @with_setup(my_setup, my_teardown)
 def test_wait_tx_status():
-    if use_backend_version:
-        sess = Session(api_root_url, backend_version=backend_version)
-    else:
-        sess = Session(api_root_url, use_login_prefix=use_login_prefix,
-                   use_signtest=use_signtest,
-                   sign_fmt=sign_fmt,
-                   pub_key_fmt=pub_key_fmt,
-                   use_request_id=use_request_id,
-                   verify_cert=verify_cert)
+    sess = create_session(use_backend_version)
     assert not sess.c_result
     sess.gen_keypair()
     sess.login()
@@ -186,41 +142,17 @@ def test_wait_tx_status():
 
 @with_setup(my_setup, my_teardown)
 def test_get_version():
-    if use_backend_version:
-        sess = Session(api_root_url, backend_version=backend_version)
-    else:
-        sess = Session(api_root_url, use_login_prefix=use_login_prefix,
-                   use_signtest=use_signtest,
-                   sign_fmt=sign_fmt,
-                   pub_key_fmt=pub_key_fmt,
-                   use_request_id=use_request_id,
-                   verify_cert=verify_cert)
+    sess = create_session(use_backend_version)
     assert is_string(sess.get_version())
 
 @with_setup(my_setup, my_teardown)
 def test_get_max_block_id():
-    if use_backend_version:
-        sess = Session(api_root_url, backend_version=backend_version)
-    else:
-        sess = Session(api_root_url, use_login_prefix=use_login_prefix,
-                   use_signtest=use_signtest,
-                   sign_fmt=sign_fmt,
-                   pub_key_fmt=pub_key_fmt,
-                   use_request_id=use_request_id,
-                   verify_cert=verify_cert)
+    sess = create_session(use_backend_version)
     assert is_number(sess.get_max_block_id())
 
 @with_setup(my_setup, my_teardown)
 def test_get_blocks_data():
-    if use_backend_version:
-        sess = Session(api_root_url, backend_version=backend_version)
-    else:
-        sess = Session(api_root_url, use_login_prefix=use_login_prefix,
-                   use_signtest=use_signtest,
-                   sign_fmt=sign_fmt,
-                   pub_key_fmt=pub_key_fmt,
-                   use_request_id=use_request_id,
-                   verify_cert=verify_cert)
+    sess = create_session(use_backend_version)
     block_id = 1
     data = sess.get_blocks_data(block_id)
     assert type(data) == dict
@@ -234,3 +166,9 @@ def test_get_blocks_data():
         assert str(block_id) in data
     assert len(data) == count
 
+@with_setup(my_setup, my_teardown)
+def test_get_block_data():
+    sess = create_session(use_backend_version)
+    block_id = 1
+    data = sess.get_block_data(block_id)
+    assert type(data) == list or type(data) is None

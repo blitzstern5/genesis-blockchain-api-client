@@ -23,7 +23,7 @@ from genesis_blockchain_api_client.calls import (
     TxStatusHasErrmsgError,
     TxStatusNoBlockIDKeyError,
     TxStatusBlockIDIsEmptyError,
-    get_max_block_id, get_blocks_data, get_version
+    get_max_block_id, get_blocks_data, get_block_data, get_version,
 )
 from genesis_blockchain_api_client.errors import (
     get_error_by_id, EmptyPublicKeyError, BadSignatureError, ServerError,
@@ -460,5 +460,14 @@ def test_get_max_block_idd():
 
 @with_setup(my_setup, my_teardown)
 def test_get_blocks_data():
-    result = get_blocks_data(api_root_url, 1)
-    assert type(result) == dict
+    block_id = 1
+    max_count = 3
+    for count in range(1, max_count):
+        result = get_blocks_data(api_root_url, block_id, count=count)
+        assert type(result) == dict
+        assert len(result) == count
+
+@with_setup(my_setup, my_teardown)
+def test_get_block_data():
+    result = get_block_data(api_root_url, 1)
+    assert type(result) == list or type(result) is None

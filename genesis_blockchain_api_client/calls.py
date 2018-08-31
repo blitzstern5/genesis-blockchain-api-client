@@ -248,3 +248,7 @@ def get_blocks_data(url, block_id, count=None, verify_cert=True):
         params.update(count=count)
     return common_get_request(url + '/blocks', params=params,
                               verify_cert=verify_cert)
+
+def get_block_data(url, block_id, verify_cert=True):
+    d = get_blocks_data(url, block_id, count=1, verify_cert=verify_cert)
+    return d[str(block_id)] if d else None

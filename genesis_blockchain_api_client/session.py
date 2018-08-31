@@ -5,7 +5,7 @@ from genesis_blockchain_tools import crypto
 from .calls import (
     get_uid, sign_or_signtest, login, prepare_tx, call_contract,
     get_tx_status, wait_tx_status, get_max_block_id, get_blocks_data,
-    get_version
+    get_block_data, get_version
 )
 
 from .backend.versions import version_to_options, get_latest_version
@@ -131,3 +131,6 @@ class Session:
 
     def get_blocks_data(self, block_id, count=None):
         return get_blocks_data(self.api_url, block_id, count=count, verify_cert=self.verify_cert)
+
+    def get_block_data(self, block_id):
+        return get_block_data(self.api_url, block_id, verify_cert=self.verify_cert)
