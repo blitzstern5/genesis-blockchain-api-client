@@ -11,17 +11,16 @@ with open(os.path.join(here, 'README.md')) as f:
 requires = [
     'mock',
     'nose',
-    'requests',
+    'requests==2.19.1',
     'requests_toolbelt',
     'urllib3',
     'ruamel.yaml',
-    #'PyYAML',
+    'PyYAML',
     'genesis-blockchain-tools',
 ]
 
 dependency_links = [
     'git+https://github.com/blitzstern5/genesis-blockchain-tools#egg=genesis-blockchain-tools',
-    'git+https://github.com/requests/requests#egg=requests',
 ]
 
 setup(
