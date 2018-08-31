@@ -24,12 +24,15 @@ from genesis_blockchain_api_client.calls import (
     TxStatusNoBlockIDKeyError,
     TxStatusBlockIDIsEmptyError,
     get_max_block_id, get_blocks_data, get_block_data, get_version,
+    get_blocks, get_block,
 )
 from genesis_blockchain_api_client.errors import (
     get_error_by_id, EmptyPublicKeyError, BadSignatureError, ServerError,
 )
 from genesis_blockchain_api_client.logging import setup_logging
 from genesis_blockchain_api_client.utils import dump_resp
+from genesis_blockchain_api_client.blockchain.block import Block
+from genesis_blockchain_api_client.blockchain.block_set import BlockSet
 from .utils import is_number, is_string, save_keypair_as, save_signature_as
 
 use_mock = True 
@@ -44,14 +47,17 @@ crypto = import_crypto_by_backend('cryptography')
 
 verify_cert = True
 
-from genesis_blockchain_api_client.backend.versions import version_to_options
+from genesis_blockchain_api_client.backend.versions import (
+    version_to_options, get_latest_version
+)
 
 #backend_version = '201802XX'
 #backend_version = '201806XX'
-backend_version = '20180830'
-print("backend version: %s" % backend_version)
+#backend_version = '20180830'
+backend_version = get_latest_version()
+#print("backend version: %s" % backend_version)
 for option_name, option_value in version_to_options(backend_version).items():
-    print("backend option: %s='%s'" % (option_name, option_value))
+    #print("backend option: %s='%s'" % (option_name, option_value))
     globals()[option_name] = option_value
 
 class MockResponse:
@@ -468,6 +474,22 @@ def test_get_blocks_data():
         assert len(result) == count
 
 @with_setup(my_setup, my_teardown)
+def test_get_blocks():
+    block_id = 1
+    max_count = 3
+    for count in range(1, max_count):
+        result = get_blocks(api_root_url, block_id, count=count)
+        assert isinstance(result, BlockSet)
+        assert len(result.blocks) == count
+
+@with_setup(my_setup, my_teardown)
 def test_get_block_data():
     result = get_block_data(api_root_url, 1)
     assert type(result) == list or type(result) is None
+
+@with_setup(my_setup, my_teardown)
+def test_get_block():
+    block_id = 1
+    result = get_block(api_root_url, block_id)
+    assert isinstance(result, Block)
+

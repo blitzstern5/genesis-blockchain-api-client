@@ -15,6 +15,9 @@ from .errors import (
     WaitTxStatusMaxTriesExceededError
 )
 
+from .blockchain.block import Block
+from .blockchain.block_set import BlockSet
+
 logger = logging.getLogger(__name__)
 
 def raise_resp_error(resp, do_resp_dump=True):
@@ -249,6 +252,13 @@ def get_blocks_data(url, block_id, count=None, verify_cert=True):
     return common_get_request(url + '/blocks', params=params,
                               verify_cert=verify_cert)
 
+def get_blocks(url, block_id, count=None, verify_cert=True):
+    return BlockSet(from_dict=get_blocks_data(url, block_id, count=count, verify_cert=verify_cert))
+
 def get_block_data(url, block_id, verify_cert=True):
     d = get_blocks_data(url, block_id, count=1, verify_cert=verify_cert)
     return d[str(block_id)] if d else None
+
+def get_block(url, block_id, verify_cert=True):
+    return Block(from_dict=get_blocks_data(url, block_id, count=1, verify_cert=verify_cert))
+

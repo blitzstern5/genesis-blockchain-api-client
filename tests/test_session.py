@@ -7,6 +7,9 @@ from genesis_blockchain_api_client.calls import TxStatusHasErrmsgError
 from genesis_blockchain_api_client.logging import setup_logging
 from .utils import is_number, is_string, save_keypair_as, save_signature_as
 
+from genesis_blockchain_api_client.blockchain.block import Block
+from genesis_blockchain_api_client.blockchain.block_set import BlockSet
+
 from nose import with_setup
 
 api_root_url = 'http://127.0.0.1:17301/api/v2'
@@ -24,9 +27,9 @@ use_backend_version = True
 #backend_version = '201806XX'
 #backend_version = '20180830'
 backend_version = get_latest_version()
-print("backend version: %s" % backend_version)
+#print("backend version: %s" % backend_version)
 for option_name, option_value in version_to_options(backend_version).items():
-    print("backend option: %s='%s'" % (option_name, option_value))
+    #print("backend option: %s='%s'" % (option_name, option_value))
     globals()[option_name] = option_value
 
 def my_setup():
@@ -154,7 +157,8 @@ def test_get_max_block_id():
 def test_get_blocks_data():
     sess = create_session(use_backend_version)
     block_id = 1
-    data = sess.get_blocks_data(block_id)
+    count = 1
+    data = sess.get_blocks_data(block_id, count=1)
     assert type(data) == dict
     assert str(block_id) in data
 
@@ -172,3 +176,13 @@ def test_get_block_data():
     block_id = 1
     data = sess.get_block_data(block_id)
     assert type(data) == list or type(data) is None
+
+@with_setup(my_setup, my_teardown)
+def test_get_blocks():
+    sess = create_session(use_backend_version)
+    block_id = 1
+    count = 3
+    blocks = sess.get_blocks(block_id, count=count)
+    assert isinstance(blocks, BlockSet)
+    assert len(blocks.blocks) == count
+
