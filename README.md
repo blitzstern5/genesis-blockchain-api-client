@@ -1,4 +1,4 @@
-Genesis BlockChain API CLient
+Genesis BlockChain API Client
 =============================
 
 # Installation
