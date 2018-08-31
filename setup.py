@@ -16,11 +16,11 @@ requires = [
     'urllib3',
     'ruamel.yaml',
     'PyYAML',
-    'genesis-blockchain-tools',
+    'genesis-blockchain-tools==0.1.4',
 ]
 
 dependency_links = [
-    'git+https://github.com/blitzstern5/genesis-blockchain-tools#egg=genesis-blockchain-tools',
+    'git+https://github.com/blitzstern5/genesis-blockchain-tools#egg=genesis-blockchain-tools-0.1.4',
 ]
 
 setup(
