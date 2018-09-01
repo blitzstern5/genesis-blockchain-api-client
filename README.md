@@ -12,7 +12,7 @@ pip install git+http://github.com/blitzstern5/genesis-blockchain-api-client
 * Create a client session
 * Generate private and public keys pair
 * Login with your private key
-* Call 'MainCondition' contract'
+* Call 'MainCondition' contract
 * Wait for the transaction is completed. In this case 'Access denied' error will be raised
 
 ```
@@ -34,7 +34,7 @@ except TxStatusHasErrmsgError as e:
 ## Session Example 2
 
 * Create a client session
-* Fetch block with ID 1from the backend
+* Fetch block with ID 1 from the backend
 
 ```
 from genesis_blockchain_api_client.session import Session
