@@ -1,13 +1,13 @@
 Genesis BlockChain API Client
 =============================
 
-# Installation
+## Installation
 
 pip install git+http://github.com/blitzstern5/genesis-blockchain-api-client
 
-# Usage
+## Usage
 
-## Session Example 1
+### Session Example 1
 
 * Create a client session
 * Generate private and public keys pair
@@ -31,7 +31,7 @@ except TxStatusHasErrmsgError as e:
 
 ```
 
-## Session Example 2
+### Session Example 2
 
 * Create a client session
 * Fetch block with ID 1 from the backend
