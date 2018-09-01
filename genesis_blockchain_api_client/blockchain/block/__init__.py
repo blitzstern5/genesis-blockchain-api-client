@@ -18,6 +18,18 @@ class Block:
         if d:
             self.from_dict(d)
 
+    def to_dict(self, style='camel', struct_style='backend', update_data={}):
+        if struct_style == 'backend':
+            d = {self.id: self.tx_set.to_list(style=style)}
+        else:
+            d = {
+                    'block_id': self.id,
+                    'transactions': self.tx_set.to_list(style=style),
+                }
+        if update_data:
+            d.update(update_data)
+        return d
+    
     def to_dict(self, style='camel'):
         return {self.id: self.tx_set.to_list(style=style)} 
 
