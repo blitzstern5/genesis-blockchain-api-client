@@ -30,9 +30,6 @@ class Block:
             d.update(update_data)
         return d
     
-    def to_dict(self, style='camel'):
-        return {self.id: self.tx_set.to_list(style=style)} 
-
     def __str__(self):
         return '| Block: ' + str(self.to_dict(style='snake')) + ' |'
 

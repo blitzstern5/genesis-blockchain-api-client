@@ -52,3 +52,46 @@ def test_block_from_dict():
             assert getattr(bl.tx_set.txs[i], n) == getattr(txs.txs[i], n)
         i += 1
 
+@with_setup(my_setup, my_teardown)
+def test_block_to_dict():
+    b = d1[0]
+    bl = Block(from_dict=b)
+
+    d = bl.to_dict()
+    assert type(d) == dict
+    block_id = get_block_id_from_dict(b)
+    assert block_id
+    assert block_id in b
+    transactions = get_block_data_from_dict(b)
+    assert type(transactions) == list
+    assert len(transactions) == len(bl.txs)
+    i = 0
+    while i < len(b[block_id]):
+        assert transactions[i] == b[block_id][i]
+        i += 1
+
+    d = bl.to_dict(struct_style='sqlalchemy')
+    assert type(d) == dict
+    assert 'block_id' in d
+    assert 'transactions' in d
+    block_id = d['block_id']
+    assert block_id
+    transactions = d['transactions']
+    assert type(transactions) == list
+    assert len(transactions) == len(bl.txs)
+    i = 0
+    while i < len(b[block_id]):
+        assert transactions[i] == b[block_id][i]
+        i += 1
+
+    update_data = {
+        'addkey1': 'addval1',
+        'addkey2': 'addval2',
+    }
+    d = bl.to_dict(struct_style='sqlalchemy', update_data=update_data)
+    assert type(d) == dict
+    assert 'block_id' in d
+    assert 'transactions' in d
+    for k, v in update_data.items():
+        assert k in d
+        assert d[k] == v
