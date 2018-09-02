@@ -266,4 +266,5 @@ def get_block_data(url, block_id, verify_cert=True):
 
 def get_block(url, block_id, verify_cert=True, b64decode_hashes=True):
     b = Block(from_dict=get_blocks_data(url, block_id, count=1, verify_cert=verify_cert), b64decode_hashes=b64decode_hashes)
+    return b
 

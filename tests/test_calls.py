@@ -505,5 +505,6 @@ def test_get_block_data():
 def test_get_block():
     block_id = 1
     result = get_block(api_root_url, block_id)
+    print("type(result): %s" % type(result))
     assert isinstance(result, Block)
 
