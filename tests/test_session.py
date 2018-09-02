@@ -186,3 +186,17 @@ def test_get_blocks():
     assert isinstance(blocks, BlockSet)
     assert len(blocks.blocks) == count
 
+@with_setup(my_setup, my_teardown)
+def test_get_block_metadata():
+    sess = create_session(use_backend_version)
+    block_id = 1
+    result = sess.get_block_metadata(block_id)
+    assert type(result) == dict
+    keys = ('hash', 'ecosystem_id', 'key_id', 'time', 'tx_count',
+            'rollbacks_hash')
+    for key in keys:
+        assert key in result
+        if key in ('hash', 'rollbacks_hash'):
+            assert is_string(result[key])
+        if key in ('ecosystem_id', 'time', 'key_id', 'tx_count'):
+            assert is_number(result[key])

@@ -24,7 +24,7 @@ from genesis_blockchain_api_client.calls import (
     TxStatusNoBlockIDKeyError,
     TxStatusBlockIDIsEmptyError,
     get_max_block_id, get_blocks_data, get_block_data, get_version,
-    get_blocks, get_block,
+    get_blocks, get_block, get_block_metadata,
 )
 from genesis_blockchain_api_client.errors import (
     get_error_by_id, EmptyPublicKeyError, BadSignatureError, ServerError,
@@ -460,9 +460,23 @@ def test_get_version():
     assert is_string(result)
 
 @with_setup(my_setup, my_teardown)
-def test_get_max_block_idd():
+def test_get_max_block_id():
     result = get_max_block_id(api_root_url)
     assert is_number(result)
+
+@with_setup(my_setup, my_teardown)
+def test_get_block_metadata():
+    block_id = 1
+    result = get_block_metadata(api_root_url, block_id)
+    assert type(result) == dict
+    keys = ('hash', 'ecosystem_id', 'key_id', 'time', 'tx_count',
+            'rollbacks_hash')
+    for key in keys:
+        assert key in result
+        if key in ('hash', 'rollbacks_hash'):
+            assert is_string(result[key])
+        if key in ('ecosystem_id', 'time', 'key_id', 'tx_count'):
+            assert is_number(result[key])
 
 @with_setup(my_setup, my_teardown)
 def test_get_blocks_data():

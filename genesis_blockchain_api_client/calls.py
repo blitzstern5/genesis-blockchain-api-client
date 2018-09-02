@@ -245,6 +245,11 @@ def get_max_block_id(url, verify_cert=True):
     result = common_get_request(url + '/maxblockid', verify_cert=verify_cert)
     return result['max_block_id']
 
+def get_block_metadata(url, block_id, verify_cert=True):
+    result = common_get_request("%s/block/%s" % (url, block_id),
+                                verify_cert=verify_cert)
+    return result
+
 def get_blocks_data(url, block_id, count=None, verify_cert=True):
     params = {'block_id': block_id, 'verify_cert': verify_cert}
     if count:
@@ -260,5 +265,5 @@ def get_block_data(url, block_id, verify_cert=True):
     return d[str(block_id)] if d else None
 
 def get_block(url, block_id, verify_cert=True, b64decode_hashes=True):
-    return Block(from_dict=get_blocks_data(url, block_id, count=1, verify_cert=verify_cert), b64decode_hashes=b64decode_hashes)
+    b = Block(from_dict=get_blocks_data(url, block_id, count=1, verify_cert=verify_cert), b64decode_hashes=b64decode_hashes)
 
