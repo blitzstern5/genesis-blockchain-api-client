@@ -46,6 +46,11 @@ feature_options_map = {
         'options': {},
         'targets': ('api-client',),
     },
+    'blocks_api_endpoint_base64_snakes': {
+        'desc': "/blocks api endpoint to fetch block internals data with base64 encoded hashes and snake-style key names",
+        'options': {},
+        'targets': ('api-client',),
+    },
 
     'system_parameters_at_ecosystem': {
         'desc': "previously were at system_parameters table",
@@ -98,7 +103,7 @@ version_features_map = {
         'git': {
             'repo': 'https://github.com/GenesisKernel/go-genesis/pull/513',
             'branch': 'master',
-            'commmit': ' e5ddc76',
+            'commmit': 'e5ddc76',
         },
         'features': (
             'system_parameters_at_ecosystem',
@@ -109,6 +114,23 @@ version_features_map = {
             'raw_pub_key_fmt',
             'request_id_in_contract_calls',
             'blocks_api_endpoint',
+        ),
+    },
+    '20180902': {
+        'git': {
+            'repo': 'https://github.com/blitzstern5/go-genesis',
+            'branch': 'feature/block-txs-info-fixes ',
+            'commmit': '9e4ddbc',
+        },
+        'features': (
+            'system_parameters_at_ecosystem',
+            'image_id_instead_of_avatar',
+            'member_info_at_members',
+            'login_prefix_in_login_call',
+            'der_sign_fmt',
+            'raw_pub_key_fmt',
+            'request_id_in_contract_calls',
+            'blocks_api_endpoint_base64_snakes',
         ),
     },
 }
