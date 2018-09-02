@@ -9,9 +9,11 @@ def get_block_data_from_dict(d):
 class Block:
     def from_dict(self, d):
         self.id = get_block_id_from_dict(d)
-        self.tx_set = TxSet(from_list=get_block_data_from_dict(d))
+        self.tx_set = TxSet(from_list=get_block_data_from_dict(d),
+                            b64decode_hashes=self.b64decode_hashes)
 
     def __init__(self, **kwargs):
+        self.b64decode_hashes = kwargs.pop('b64decode_hashes', False)
         self.id = kwargs.get('id') 
         self.tx_set = kwargs.get('tx_set')
         d = kwargs.get('from_dict')

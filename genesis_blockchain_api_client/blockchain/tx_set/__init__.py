@@ -7,10 +7,13 @@ class TxSet:
 
     def from_list(self, l):
         for item in l:
+            if self.b64decode_hashes:
+                item['b64decode_hashes'] = self.b64decode_hashes
             tx = Tx(**item)
             self.add(tx)
 
     def __init__(self, **kwargs):
+        self.b64decode_hashes = kwargs.pop('b64decode_hashes', False)
         self.txs = kwargs.get('txs', []) 
         l = kwargs.get('from_list')
         if l:

@@ -12,10 +12,12 @@ class BlockSet:
     def from_dict(self, d):
         for block_id, data in d.items():
             block_d = {block_id: data}
-            block = Block(from_dict={block_id: data})
+            block = Block(from_dict={block_id: data},
+                          b64decode_hashes=self.b64decode_hashes)
             self.add(block)
 
     def __init__(self, **kwargs):
+        self.b64decode_hashes = kwargs.pop('b64decode_hashes', False)
         self.blocks = kwargs.get('blocks', []) 
         l = kwargs.get('from_list')
         if l:

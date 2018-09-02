@@ -1,8 +1,12 @@
+import base64
+
 from .param_set import ParamSet
 
 class Tx:
     def from_dict(self, d):
         self.hash = d.get('Hash', d.get('hash'))
+        if self.b64decode_hashes:
+            self.hash = base64.b64decode(self.hash)
         self.contract_name = d.get('ContractName', d.get('contract_name'))
         self.params = d.get('Params', d.get('params'))
         self.param_set = None
@@ -11,6 +15,7 @@ class Tx:
         self.key_id = d.get('KeyID', d.get('key_id')) 
 
     def __init__(self, **kwargs):
+        self.b64decode_hashes = kwargs.pop('b64decode_hashes', False)
         self.from_dict(kwargs)
         d = kwargs.get('from_dict')
         if d:

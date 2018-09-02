@@ -43,12 +43,12 @@ feature_options_map = {
     },
     'blocks_api_endpoint': {
         'desc': "/blocks api endpoint to fetch block internals data",
-        'options': {},
+        'options': {'keys_in_snake_style': False, 'b64decode_hashes': False},
         'targets': ('api-client',),
     },
     'blocks_api_endpoint_base64_snakes': {
         'desc': "/blocks api endpoint to fetch block internals data with base64 encoded hashes and snake-style key names",
-        'options': {},
+        'options': {'keys_in_snake_style': True, 'b64decode_hashes': True},
         'targets': ('api-client',),
     },
 

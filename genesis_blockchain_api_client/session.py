@@ -28,6 +28,7 @@ class Session:
         self.pub_key_fmt = kwargs.get('pub_key_fmt', 'RAW')
         self.send_pub_key = kwargs.get('send_pub_key', True)
         self.use_request_id = kwargs.get('use_request_id', True)
+        self.b64decode_hashes = kwargs.get('b64decode_hashes', True)
 
         self.max_sign_tries = kwargs.get('max_sign_tries', 1)
         self.use_login_prefix = kwargs.get('use_login_prefix', True)
@@ -136,7 +137,9 @@ class Session:
         return get_block_data(self.api_url, block_id, verify_cert=self.verify_cert)
 
     def get_blocks(self, block_id, count=None):
-        return get_blocks(self.api_url, block_id, count=count, verify_cert=self.verify_cert)
+        return get_blocks(self.api_url, block_id, count=count, verify_cert=self.verify_cert, b64decode_hashes=self.b64decode_hashes)
 
     def get_block(self, block_id):
-        return get_block(self.api_url, block_id, verify_cert=self.verify_cert)
+        return get_block(self.api_url, block_id, verify_cert=self.verify_cert,
+                         b64decode_hashes=self.b64decode_hashes)
+
