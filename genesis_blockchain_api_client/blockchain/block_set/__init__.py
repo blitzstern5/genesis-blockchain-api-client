@@ -1,4 +1,8 @@
+import logging
+
 from ..block import Block
+
+logger = logging.getLogger(__name__)
 
 class BlockSet:
     def add(self, block):
@@ -18,6 +22,7 @@ class BlockSet:
 
     def __init__(self, **kwargs):
         self.b64decode_hashes = kwargs.pop('b64decode_hashes', False)
+        logger.debug("self.b64decode_hashes: %s" % self.b64decode_hashes)
         self.blocks = kwargs.get('blocks', []) 
         l = kwargs.get('from_list')
         if l:
@@ -33,7 +38,7 @@ class BlockSet:
         return l
 
     def __str__(self):
-        return '| BlockSet: ' + str(self.to_list(style='snake')) + ' |'
+        return str(self.to_list(style='snake'))
 
     def __repr__(self):
         return str(self)

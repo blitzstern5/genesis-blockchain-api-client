@@ -1,4 +1,8 @@
+import logging
+
 from ..tx import Tx
+
+logger = logging.getLogger(__name__)
 
 class TxSet:
 
@@ -14,6 +18,7 @@ class TxSet:
 
     def __init__(self, **kwargs):
         self.b64decode_hashes = kwargs.pop('b64decode_hashes', False)
+        logger.debug("self.b64decode_hashes: %s" % self.b64decode_hashes)
         self.txs = kwargs.get('txs', []) 
         l = kwargs.get('from_list')
         if l:
@@ -26,7 +31,7 @@ class TxSet:
         return l
 
     def __str__(self):
-        return '| TxSet: ' + str(self.to_list(style='snake')) + ' |'
+        return str(self.to_list(style='snake'))
 
     def __repr__(self):
         return str(self)

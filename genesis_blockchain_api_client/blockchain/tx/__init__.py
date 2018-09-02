@@ -1,12 +1,16 @@
 import base64
+import logging
 
 from .param_set import ParamSet
+
+logger = logging.getLogger(__name__)
 
 class Tx:
     def from_dict(self, d):
         self.hash = d.get('Hash', d.get('hash'))
+        logger.debug("b64decode_hashes: %s" % self.b64decode_hashes)
         if self.b64decode_hashes:
-            self.hash = base64.b64decode(self.hash)
+            self.hash = base64.b64decode(self.hash).hex()
         self.contract_name = d.get('ContractName', d.get('contract_name'))
         self.params = d.get('Params', d.get('params'))
         self.param_set = None
@@ -16,6 +20,7 @@ class Tx:
 
     def __init__(self, **kwargs):
         self.b64decode_hashes = kwargs.pop('b64decode_hashes', False)
+        logger.debug("self.b64decode_hashes: %s" % self.b64decode_hashes)
         self.from_dict(kwargs)
         d = kwargs.get('from_dict')
         if d:
@@ -37,7 +42,7 @@ class Tx:
         return d
 
     def __str__(self):
-        return '| Tx: ' + str(self.to_dict(style='snake')) + ' |'
+        return str(self.to_dict(style='snake'))
 
     def __repr__(self):
         return str(self)

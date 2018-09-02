@@ -1,4 +1,8 @@
+import logging
+
 from ..tx_set import TxSet
+
+logger = logging.getLogger(__name__)
 
 def get_block_id_from_dict(d):
     return tuple(d.keys())[0]
@@ -14,6 +18,7 @@ class Block:
 
     def __init__(self, **kwargs):
         self.b64decode_hashes = kwargs.pop('b64decode_hashes', False)
+        logger.debug("self.b64decode_hashes: %s" % self.b64decode_hashes)
         self.id = kwargs.get('id') 
         self.tx_set = kwargs.get('tx_set')
         d = kwargs.get('from_dict')
@@ -33,7 +38,7 @@ class Block:
         return d
     
     def __str__(self):
-        return '| Block: ' + str(self.to_dict(style='snake')) + ' |'
+        return str(self.to_dict(style='snake'))
 
     def __repr__(self):
         return str(self)
