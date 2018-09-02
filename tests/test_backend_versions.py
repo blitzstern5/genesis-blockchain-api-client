@@ -20,11 +20,11 @@ def my_teardown():
 
 @with_setup(my_setup, my_teardown)
 def test_get_available_versions():
-    assert get_available_versions() == ('201802XX', '20180512', '201806XX', '20180830')
+    assert get_available_versions() == ('201802XX', '20180512', '201806XX', '20180830', '20180902')
 
 @with_setup(my_setup, my_teardown)
 def test_get_latest_version():
-    assert get_latest_version() == '20180830'
+    assert get_latest_version() == '20180902'
 
 @with_setup(my_setup, my_teardown)
 def test_get_features():
