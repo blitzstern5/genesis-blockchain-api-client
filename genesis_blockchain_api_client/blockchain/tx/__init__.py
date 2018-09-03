@@ -39,10 +39,11 @@ class Tx:
                          'Params': 'params', 'KeyID': 'key_id', 'Time': 'time', 'type': 'Type'}
         else:
             names_map = {'hash': 'hash', 'contract_name': 'contract_name',
-                         'params': 'params', 'key_id': 'key_id', 'Time': 'time', 'Type': 'type'}
+                         'params': 'params', 'key_id': 'key_id', 'time': 'time', 'type': 'type'}
         for name_to, name_from in names_map.items():
             try:
-                d[name_to] = getattr(self, name_from)
+                if not getattr(self, name_from) is None:
+                    d[name_to] = getattr(self, name_from)
             except AttributeError:
                 pass
         return d
