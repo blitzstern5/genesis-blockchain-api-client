@@ -25,6 +25,8 @@ from genesis_blockchain_api_client.calls import (
     TxStatusBlockIDIsEmptyError,
     get_max_block_id, get_blocks_data, get_block_data, get_version,
     get_blocks, get_block, get_block_metadata,
+    get_detailed_blocks_data, get_detailed_block_data,
+    get_detailed_blocks, get_detailed_block,
 )
 from genesis_blockchain_api_client.errors import (
     get_error_by_id, EmptyPublicKeyError, BadSignatureError, ServerError,
@@ -478,6 +480,7 @@ def test_get_block_metadata():
         if key in ('ecosystem_id', 'time', 'key_id', 'tx_count'):
             assert is_number(result[key])
 
+
 @with_setup(my_setup, my_teardown)
 def test_get_blocks_data():
     block_id = 1
@@ -488,6 +491,35 @@ def test_get_blocks_data():
         assert len(result) == count
 
 @with_setup(my_setup, my_teardown)
+def test_get_block_data():
+    result = get_block_data(api_root_url, 1)
+    assert type(result) == list or type(result) is None
+
+
+@with_setup(my_setup, my_teardown)
+def test_get_detailed_blocks_data():
+    block_id = 1
+    max_count = 3
+    for count in range(1, max_count):
+        result = get_detailed_blocks_data(api_root_url, block_id, count=count)
+        assert type(result) == dict
+        assert len(result) == count
+        for block_id, block in result.items():
+            assert type(block) == dict
+            assert 'transactions' in block 
+            assert 'header' in block
+            assert 'block_id' in block['header']
+            assert str(block_id) == str(block['header']['block_id'])
+
+@with_setup(my_setup, my_teardown)
+def test_get_detailed_block_data():
+    result = get_detailed_block_data(api_root_url, 1)
+    assert type(result) == dict
+    assert 'transactions' in result
+    assert 'header' in result
+
+
+@with_setup(my_setup, my_teardown)
 def test_get_blocks():
     block_id = 1
     max_count = 3
@@ -496,15 +528,27 @@ def test_get_blocks():
         assert isinstance(result, BlockSet)
         assert len(result.blocks) == count
 
-@with_setup(my_setup, my_teardown)
-def test_get_block_data():
-    result = get_block_data(api_root_url, 1)
-    assert type(result) == list or type(result) is None
 
 @with_setup(my_setup, my_teardown)
 def test_get_block():
     block_id = 1
     result = get_block(api_root_url, block_id)
-    print("type(result): %s" % type(result))
+    assert isinstance(result, Block)
+
+
+@with_setup(my_setup, my_teardown)
+def test_get_detailed_blocks():
+    block_id = 1
+    max_count = 3
+    for count in range(1, max_count):
+        result = get_detailed_blocks(api_root_url, block_id, count=count)
+        assert isinstance(result, BlockSet)
+        #assert len(result.blocks) == count
+
+
+@with_setup(my_setup, my_teardown)
+def test_get_detailed_block():
+    block_id = 1
+    result = get_detailed_block(api_root_url, block_id)
     assert isinstance(result, Block)
 

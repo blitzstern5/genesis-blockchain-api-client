@@ -1,5 +1,6 @@
 import base64
 import logging
+import binascii
 
 from ..tx_set import TxSet
 from .header import Header
@@ -24,11 +25,14 @@ class Block:
         for field in self._fields:
             if field in data:
                 val = data[field]
-                if self._b64decode_hashes:
-                    if field in self._b64fields:
-                        val = base64.b64decode(val).hex()
-                    elif field == 'mrkl_root':
-                        val = base64.b64decode(val).decode()
+                if val and self._b64decode_hashes:
+                    try:
+                        if field in self._b64fields:
+                            val = base64.b64decode(val).hex()
+                        elif field == 'mrkl_root':
+                            val = base64.b64decode(val).decode()
+                    except binascii.Error:
+                        logger.warning("cannot b64decode %s: %s" % (field, val))
                 setattr(self, field, val)
         if not 'header' in data:
             header = {}
@@ -39,12 +43,12 @@ class Block:
             txs = []
         else:
             txs = data['transactions']
-        self.tx_set = TxSet() #from_list=txs, b64decode_hashes=self._b64decode_hashes)
+        self.tx_set = TxSet(from_list=txs, b64decode_hashes=self._b64decode_hashes)
 
     def __init__(self, **kwargs):
-        self.header = Header()
-        self.tx_set = TxSet()
         self._b64decode_hashes = kwargs.pop('b64decode_hashes', False)
+        self.header = Header(b64decode_hashes=self._b64decode_hashes)
+        self.tx_set = TxSet(b64decode_hashes=self._b64decode_hashes)
         self._fields = ('hash', 'ecosystem_id', 'node_position', 'key_id', 'time',
                         'tx_count', 'rollbacks_hash', 'mrkl_root', 'bin_data',
                         'sys_update', 'gen_block', 'stop_count')
@@ -67,7 +71,7 @@ class Block:
             for field in self._fields:
                 if hasattr(self, field):
                     d[field] = getattr(self, field)
-            if self.header.size:
+            if self.header.count:
                 d['header'] = self.header.to_dict(style=style, struct_style=struct_style)
             d['transactions'] = self.tx_set.to_list(style=style)
             if update_data:

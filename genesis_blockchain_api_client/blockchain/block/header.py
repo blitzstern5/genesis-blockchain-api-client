@@ -1,5 +1,6 @@
 import base64
 import logging
+import binascii
 
 from ..tx_set import TxSet
 from ...utils import camel_to_snake
@@ -15,8 +16,11 @@ class Header:
         for field in self._fields:
             if field in d:
                 val = d[field]
-                if self._b64decode_hashes and field in self._b64fields:
-                    val = base64.b64decode(val).hex()
+                if val and self._b64decode_hashes and field in self._b64fields:
+                    try:
+                        val = base64.b64decode(val).hex()
+                    except binascii.Error:
+                        logger.warning("cannot b64code %s: %s" % (field, val))
                 self.add(field, val)
 
     def __init__(self, **kwargs):
@@ -33,7 +37,7 @@ class Header:
             self.from_dict(d)
 
     @property
-    def size(self):
+    def count(self):
         return self._fields_num
 
     def to_dict(self, style='camel', struct_style='backend', update_data={}):

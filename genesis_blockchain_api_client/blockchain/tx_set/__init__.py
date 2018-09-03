@@ -7,7 +7,6 @@ logger = logging.getLogger(__name__)
 class TxSet:
 
     def add(self, tx):
-        self._tx_num += 1
         self.txs.append(tx)
 
     def from_list(self, l):
@@ -18,7 +17,6 @@ class TxSet:
             self.add(tx)
 
     def __init__(self, **kwargs):
-        self._tx_num = 0
         self.b64decode_hashes = kwargs.pop('b64decode_hashes', False)
         logger.debug("self.b64decode_hashes: %s" % self.b64decode_hashes)
         self.txs = kwargs.get('txs', []) 
@@ -27,8 +25,8 @@ class TxSet:
             self.from_list(l)
 
     @property
-    def size(self):
-        return self._tx_num
+    def count(self):
+        return len(self.txs)
 
     def to_list(self, style='camel'):
         l = []

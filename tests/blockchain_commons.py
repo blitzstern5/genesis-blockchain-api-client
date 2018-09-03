@@ -164,6 +164,8 @@ d3 = [
     },
 ]
 
+d4 = blocks_list_to_dict(d3)
+
 def get_txs(d):
     return d[tuple(d.keys())[0]]
 

@@ -177,6 +177,32 @@ def test_get_block_data():
     data = sess.get_block_data(block_id)
     assert type(data) == list or type(data) is None
 
+
+@with_setup(my_setup, my_teardown)
+def test_get_detailed_blocks_data():
+    sess = create_session(use_backend_version)
+    block_id = 1
+    count = 1
+    data = sess.get_detailed_blocks_data(block_id, count=1)
+    assert type(data) == dict
+    assert str(block_id) in data
+
+    max_count = 4
+    block_id = 1
+    for count in range(1, max_count):
+        data = sess.get_detailed_blocks_data(block_id, count=count)
+        assert type(data) == dict
+        assert str(block_id) in data
+    assert len(data) == count
+
+@with_setup(my_setup, my_teardown)
+def test_get_detailed_block_data():
+    sess = create_session(use_backend_version)
+    block_id = 1
+    data = sess.get_detailed_block_data(block_id)
+    assert type(data) == dict or type(data) is None
+
+
 @with_setup(my_setup, my_teardown)
 def test_get_blocks():
     sess = create_session(use_backend_version)
@@ -187,7 +213,7 @@ def test_get_blocks():
     assert len(blocks.blocks) == count
 
 @with_setup(my_setup, my_teardown)
-def test_get_block_metadata():
+def test_get_block():
     sess = create_session(use_backend_version)
     block_id = 1
     result = sess.get_block_metadata(block_id)
@@ -200,3 +226,20 @@ def test_get_block_metadata():
             assert is_string(result[key])
         if key in ('ecosystem_id', 'time', 'key_id', 'tx_count'):
             assert is_number(result[key])
+
+
+@with_setup(my_setup, my_teardown)
+def test_get_detailed_blocks():
+    sess = create_session(use_backend_version)
+    block_id = 1
+    count = 3
+    blocks = sess.get_detailed_blocks(block_id, count=count)
+    assert isinstance(blocks, BlockSet)
+    assert len(blocks.blocks) == count
+
+@with_setup(my_setup, my_teardown)
+def test_get_detailed_block():
+    sess = create_session(use_backend_version)
+    block_id = 1
+    result = sess.get_detailed_block(block_id)
+    assert isinstance(result, Block)
