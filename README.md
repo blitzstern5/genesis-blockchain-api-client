@@ -41,9 +41,4 @@ from genesis_blockchain_api_client.session import Session
 
 s = Session('http://localhost:17301/api/v2')
 print(s.get_block(1))
-try:
-    sess.wait_tx_status()
-except TxStatusHasErrmsgError as e:
-    print(e)
-
 ```
