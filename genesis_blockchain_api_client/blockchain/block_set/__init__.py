@@ -1,6 +1,6 @@
 import logging
 
-from ..block import Block
+from ..block import Block, get_block_id_from_dict, get_block_data_from_dict
 
 logger = logging.getLogger(__name__)
 

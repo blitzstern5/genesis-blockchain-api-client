@@ -11,9 +11,7 @@ class TxSet:
 
     def from_list(self, l):
         for item in l:
-            if self.b64decode_hashes:
-                item['b64decode_hashes'] = self.b64decode_hashes
-            tx = Tx(**item)
+            tx = Tx(from_dict=item, b64decode_hashes=self.b64decode_hashes)
             self.add(tx)
 
     def __init__(self, **kwargs):
