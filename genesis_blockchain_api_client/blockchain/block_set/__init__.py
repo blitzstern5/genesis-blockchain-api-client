@@ -49,6 +49,12 @@ class BlockSet:
             l.append(block.to_dict(style=style))
         return l
 
+    def to_detailed_list(self, style='camel'):
+        l = []
+        for block in self.blocks:
+            l.append(block.to_dict(style=style, struct_style='sqlalchemy'))
+        return l
+
     def __str__(self):
         return str(self.to_list(style='snake'))
 

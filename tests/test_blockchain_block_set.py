@@ -90,3 +90,20 @@ def test_blocks_to_list():
     assert len(bls.blocks) == len(bs)
     blsl = bls.to_list(style='camel')
     assert blsl == bs
+
+@with_setup(my_setup, my_teardown)
+def test_blocks_to_detailed_list():
+    bs = d1
+    bls = BlockSet(from_list=bs)
+    assert len(bls.blocks) == len(bs)
+    blsl = bls.to_detailed_list(style='camel')
+    assert type(blsl) == list
+    assert len(blsl) == len(d2)
+    i = 0
+    while i < len(blsl):
+        assert 'block_id' in blsl[i]
+        assert blsl[i]['block_id']
+        if 'transactions' in blsl[i]:
+            assert type(blsl[i]['transactions']) ==list
+        i += 1
+
