@@ -41,6 +41,17 @@ class ParamSet:
                 d[item.name] = item.value
         return d
 
+    def to_list(self, style='camel'):
+        l = []
+        for item in self.__items:
+            d = {}
+            if style == 'camel':
+                d[item.oname] = item.value
+            else:
+                d[item.name] = item.value
+            l.append(d)
+        return l
+
     def __str__(self):
         return '| ParamSet: ' + str(self.to_dict(style='snake')) + ' |'
 

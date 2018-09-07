@@ -35,3 +35,15 @@ def test_param_object_creation():
     assert tp.oname == kv[0]
     assert tp.name == camel_to_snake(kv[0])
     assert tp.value == kv[1]
+
+@with_setup(my_setup, my_teardown)
+def test_param_to_dict():
+    ps = get_txs(d1[0])[0]['Params']
+    kv = get_first_kv(ps)
+    p = Param(*kv)
+    pd = p.to_dict()
+    assert pd['name'] == kv[0]
+    assert pd['value'] == kv[1]
+    pd = p.to_dict(style='backend')
+    assert pd['name'] == camel_to_snake(kv[0])
+    assert pd['value'] == kv[1]

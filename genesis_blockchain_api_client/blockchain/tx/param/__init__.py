@@ -1,4 +1,5 @@
 from ....utils import camel_to_snake
+    #bs.from_detailed_dict(d4)
 
 def get_first_kv(d):
     n = tuple(d.keys())[0]
@@ -11,6 +12,12 @@ class Param:
         if kwargs:
             self.oname, self.value = get_first_kv(kwargs)
         self.name = camel_to_snake(self.oname)
+
+    def to_dict(self, style='camel'):
+        if style == 'camel':
+            return {'name': self.oname, 'value': self.value}
+        else:
+            return {'name': self.name, 'value': self.value}
 
     def __str__(self):
         return str({self.oname: self.value})
