@@ -148,6 +148,19 @@ def my_teardown():
     p_patcher.stop()
     g_patcher.stop()
 
+def my_mock_setup():
+    g_patcher = patch('genesis_blockchain_api_client.api_calls.requests.get',
+                      side_effect=mocked_requests_get)
+    p_patcher = patch('genesis_blockchain_api_client.api_calls.requests.post',
+                      side_effect=mocked_requests_post)
+    g_patcher.start()
+    p_patcher.start()
+
+def my_mock_teardown():
+    global g_patcher, p_patcher
+    p_patcher.stop()
+    g_patcher.stop()
+
 @with_setup(my_setup, my_teardown)
 def test_get_uid():
     result = get_uid(api_root_url)
@@ -465,6 +478,8 @@ def test_get_version():
 def test_get_max_block_id():
     result = get_max_block_id(api_root_url)
     assert is_number(result)
+    if use_mock:
+        assert result == 3
 
 @with_setup(my_setup, my_teardown)
 def test_get_block_metadata():
@@ -545,10 +560,14 @@ def test_get_detailed_blocks():
         assert isinstance(result, BlockSet)
         #assert len(result.blocks) == count
 
-
 @with_setup(my_setup, my_teardown)
 def test_get_detailed_block():
     block_id = 1
     result = get_detailed_block(api_root_url, block_id)
     assert isinstance(result, Block)
 
+@with_setup(my_setup, my_teardown)
+def test_get_detailed_block():
+    block_id = 1
+    result = get_detailed_block(api_root_url, block_id)
+    assert isinstance(result, Block)
