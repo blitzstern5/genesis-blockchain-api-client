@@ -9,8 +9,11 @@ logger = logging.getLogger(__name__)
 
 class Header:
     def add(self, name, val):
-        self._fields_num += 1
-        setattr(self, name, val)
+        if not self._ignore_undeclared_fields or name in self._fields:
+            self._fields_num += 1
+            setattr(self, name, val)
+        else:
+            logger.warning("field '%s' is wasn't declared and skipped")
 
     def from_dict(self, d):
         for field in self._fields:
@@ -23,18 +26,24 @@ class Header:
                         logger.warning("cannot b64code %s: %s" % (field, val))
                 self.add(field, val)
 
-    def __init__(self, **kwargs):
-        self._fields_num = 0
-        self._fields = ('block_id', 'time', 'ecosystem_id', 'key_id', 'node_position', 'sign',
-                        'hash', 'version')
+    def set_defaults(self):
         for field in self._fields:
             setattr(self, field, None)
+
+    def __init__(self, **kwargs):
+        self._ignore_undeclared_fields = bool(kwargs.pop('ignore_undeclared_fields', True))
+        self._fields_num = 0
+        self._fields = ('block_id', 'time', 'ecosystem_id', 'key_id',
+                        'node_position', 'sign', 'hash', 'version')
+        self.set_defaults()
         self._b64fields = ('hash', 'sign')
         self._b64decode_hashes = kwargs.pop('b64decode_hashes', False)
         logger.debug("self._b64decode_hashes: %s" % self._b64decode_hashes)
         d = kwargs.get('from_dict')
         if d:
             self.from_dict(d)
+        else:
+            self.from_dict(kwargs)
 
     @property
     def count(self):
