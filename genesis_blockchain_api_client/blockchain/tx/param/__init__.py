@@ -13,11 +13,17 @@ class Param:
             self.oname, self.value = get_first_kv(kwargs)
         self.name = camel_to_snake(self.oname)
 
-    def to_dict(self, style='camel'):
+    def to_dict(self, style='camel', struct_style='sqlalchemy'):
         if style == 'camel':
-            return {'name': self.oname, 'value': self.value}
+            if struct_style == 'simple_dict':
+                return {self.oname: self.value}
+            else:
+                return {'name': self.oname, 'value': self.value}
         else:
-            return {'name': self.name, 'value': self.value}
+            if struct_style == 'simple_dict':
+                return {self.name: self.value}
+            else:
+                return {'name': self.name, 'value': self.value}
 
     def __str__(self):
         return str({self.oname: self.value})
