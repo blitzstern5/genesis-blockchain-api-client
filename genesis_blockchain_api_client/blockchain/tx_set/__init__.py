@@ -1,10 +1,12 @@
+from collections import Sequence
+
 import logging
 
 from ..tx import Tx
 
 logger = logging.getLogger(__name__)
 
-class TxSet:
+class TxSet(Sequence):
 
     def add(self, tx):
         self.txs.append(tx)
@@ -21,6 +23,12 @@ class TxSet:
         l = kwargs.get('from_list')
         if l:
             self.from_list(l)
+
+    def __getitem__(self, index):
+        return self.txs[index]
+
+    def __len__(self):
+        return len(self.txs)
 
     @property
     def count(self):

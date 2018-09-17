@@ -3,6 +3,7 @@ from nose import with_setup
 from genesis_blockchain_api_client.blockchain.tx.param import (
     Param, get_first_kv
 )
+from genesis_blockchain_api_client.blockchain.tx.param import Param
 from genesis_blockchain_api_client.blockchain.tx.param_set import ParamSet
 from genesis_blockchain_api_client.utils import camel_to_snake
 
@@ -22,8 +23,16 @@ def test_param_set_object_creation():
     assert ps.get_orig_names() == ['ParamName1', 'ParamName2']
     assert getattr(ps, 'param_name1') == 'val1'
     assert getattr(ps, 'param_name2') == 'val2'
-    assert str(ps) == "| ParamSet: {'param_name1': 'val1', 'param_name2': 'val2'} |"
+    assert str(ps) == "{'param_name1': 'val1', 'param_name2': 'val2'}"
 
+@with_setup(my_setup, my_teardown)
+def test_param_set_iter():
+    _ps = get_txs(d1[0])[0]['Params']
+    ps = ParamSet(**_ps)
+    for name, value in ps.items():
+        pass
+    for name, value in _ps.items():
+        assert value == ps[camel_to_snake(name)]
 
 @with_setup(my_setup, my_teardown)
 def test_param_set_to_dict():

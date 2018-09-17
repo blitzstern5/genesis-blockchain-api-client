@@ -24,6 +24,20 @@ def test_txs_object_creation():
     assert len(txs.txs) == len(ts)
 
 @with_setup(my_setup, my_teardown)
+def test_txs_iter():
+    ts = get_txs(d1[0])
+    cnt = 0
+    txs = TxSet()
+    for t in ts:
+        tx = Tx(**t)
+        txs.add(tx)
+        assert txs.txs[cnt] == tx
+        cnt += 1
+    assert len(txs.txs) == len(ts)
+    for tx in txs:
+        assert isinstance(tx, Tx)
+
+@with_setup(my_setup, my_teardown)
 def test_txs_from_list():
     ts = get_txs(d1[0])
     txs = TxSet(from_list=ts)

@@ -1,8 +1,10 @@
+from collections import Mapping
+
 from ....utils import camel_to_snake
 
 from ..param import Param
 
-class ParamSet:
+class ParamSet(Mapping):
 
     def add(self, param):
         self.__orig_names.append(param.oname)
@@ -32,6 +34,22 @@ class ParamSet:
         self.__items = []
         self.from_dict(kwargs)
 
+    def __iter__(self):
+        for item in self.__items:
+            yield item.name
+
+    def __getitem__(self, name):
+        try:
+            return self.__items[self.__names.index(name)].value
+        except ValueError:
+            raise KeyError
+
+    def __len__(self):
+        return len(self.__items)
+
+    def count(self):
+        return len(self.__items)
+
     def to_dict(self, style='camel'):
         d = {}
         for item in self.__items:
@@ -53,7 +71,7 @@ class ParamSet:
         return l
 
     def __str__(self):
-        return '| ParamSet: ' + str(self.to_dict(style='snake')) + ' |'
+        return str(self.to_dict(style='snake'))
 
     def __repr__(self):
         return str(self)
