@@ -28,12 +28,12 @@ def raise_resp_error(resp, do_resp_dump=True):
     except JSONDecodeError as e:
         has_json = False
     if has_json:
-        msg = resp_json.get('msg', None)
+        msg = str(resp_json.get('msg', None))
         error_id = resp_json.get('error', None)
         logger.debug("error_id: %s" % error_id)
         error = get_error_by_id(error_id, msg=msg)
         if do_resp_dump:
-            msg += ' ::: ' + dump_resp(resp)
+            msg += ' ::: ' + str(dump_resp(resp))
         raise error(msg, error_id, response=resp)
     else:
         if resp.status_code != requests.codes.ok:
@@ -60,6 +60,16 @@ def common_get_request(url, params={}, headers={}, verify_cert=True,
 def common_post_request(url, params={}, data={}, headers={}, verify_cert=True,
                         catch_errmsg=True):
     resp = requests.post(url, headers=headers, params=params, data=data,
+                         verify=verify_cert)
+    check_resp_error(resp)
+    result = resp.json()
+    logger.debug("url: %s; params: %s; headers: %s; data: %s result: %s" \
+                 % (url, params, headers, data, result))
+    return result
+
+def files_post_request(url, params={}, data={}, headers={}, verify_cert=True,
+                        catch_errmsg=True):
+    resp = requests.post(url, headers=headers, params=params, files=data,
                          verify=verify_cert)
     check_resp_error(resp)
     result = resp.json()

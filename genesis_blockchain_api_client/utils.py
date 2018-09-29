@@ -5,7 +5,14 @@ import re
 def dump_resp(resp):
     if isinstance(resp, requests.Response):
         data = dump.dump_all(resp)
-    return data.decode('utf-8')
+    try:
+        data = data.decode('utf-8')
+    except UnicodeDecodeError:
+        try:
+            data = data.decode()
+        except UnicodeDecodeError:
+            pass
+    return data
 
 def camel_to_snake(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
