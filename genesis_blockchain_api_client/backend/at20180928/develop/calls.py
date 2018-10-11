@@ -5,6 +5,7 @@ import logging
 from ....errors import  ExceptionWithKwargs
 from ....calls import (
     common_get_request, common_post_request, files_post_request, get_uid, login,
+    errmsg_to_string,
     #TxStatusHasErrmsgError, TxStatusBlockIDIsEmptyError,
     #TxStatusNoBlockIDKeyError, WaitTxStatusTimeoutError,
     #WaitTxStatusMaxTriesExceededError,
