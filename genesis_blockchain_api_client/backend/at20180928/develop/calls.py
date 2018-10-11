@@ -54,14 +54,12 @@ def get_tx_status(url, tx_hashes, token, verify_cert=True):
         headers={'Authorization': 'Bearer ' + token},
         params={'data': json.dumps({'hashes': tx_hashes})}
     )
-    print("get_tx_status 1 g_result: %s" % g_result)
     results = {}
     for h in tx_hashes:
-        result = g_result['results'][h] #['blockid']
-        print("get_tx_status 2 h: %s, result: %s" % (h, result))
+        result = g_result['results'][h]
         logger.debug("result: %s" % result)
         if 'errmsg' in result:
-            logger.debug("    'errmsg' key is present HEREEEEE!!!!")
+            logger.debug("    'errmsg' key is present")
             raise TxStatusHasErrmsgError(errmsg_to_string(result['errmsg']),
                         url=url, tx_hash=h, token=token,
                         verify_cert=verify_cert, result=result)
