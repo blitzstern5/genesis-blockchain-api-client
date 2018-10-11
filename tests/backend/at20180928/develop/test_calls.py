@@ -11,7 +11,7 @@ from genesis_blockchain_tools.crypto.backend import (
 from genesis_blockchain_api_client.logging import setup_logging
 from genesis_blockchain_api_client.backend.at20180928.develop.calls import (
     common_get_request, common_post_request, files_post_request, get_uid, login,
-    get_contract_info, send_tx, get_tx_status,
+    get_contract_info, send_tx, get_tx_status, wait_tx_status
 )
 from genesis_blockchain_api_client.backend.versions import (
     version_to_options, get_latest_version
@@ -67,7 +67,7 @@ def nontest_get_contract_info():
 @with_setup(my_setup, my_teardown)
 def test_send_tx():
     uid, token = get_uid(api_root_url)
-    priv_key = 'f69337363041b5ebc7b35c4e211885dc4a37f09d40d69977e1fc3c6815404856'
+    priv_key = 'b2ec5aa72da2724e2bd55bdd5e443e090fdc53076c4080d7d36a4d98280669dc'
     pub_key = crypto.get_public_key(priv_key)
     l_result = login(api_root_url, priv_key, uid, token, sign_fmt=sign_fmt,
                        use_signtest=use_signtest, crypto_backend=crypto,
@@ -89,13 +89,16 @@ def test_send_tx():
     assert 'contract1' in s_result['hashes'] and len(s_result['hashes']['contract1']) > 32
     hashes = [n for n in s_result['hashes'].values()]
 
-    g_result = get_tx_status(api_root_url, hashes, l_result['token'])
-    assert 'results' in g_result and g_result['results']
-    for h in hashes:
-        assert h in g_result['results']
-        assert 'blockid' in g_result['results'][h]
-    time.sleep(3)
-    g_result = get_tx_status(api_root_url, hashes, l_result['token'])
-    for h in hashes:
-        assert g_result['results'][h]['blockid']
+    #g_result = get_tx_status(api_root_url, hashes, l_result['token'])
+    #assert 'results' in g_result and g_result['results']
+    #for h in hashes:
+    #    assert h in g_result['results']
+    #    assert 'blockid' in g_result['results'][h]
+
+    #time.sleep(3)
+    #g_result = get_tx_status(api_root_url, hashes, l_result['token'])
+    #for h in hashes:
+    #    assert g_result['results'][h]['blockid']
+    w_result = wait_tx_status(api_root_url, hashes, l_result['token'])
+    print("w_result: %s" % w_result)
 

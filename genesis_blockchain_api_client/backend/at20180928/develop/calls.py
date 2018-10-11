@@ -1,4 +1,4 @@
-from time import time
+from time import time, sleep
 import json
 import logging 
 
@@ -48,12 +48,78 @@ class WaitTxStatusMaxTriesExceededError(WaitTxStatusError):
 
 def get_tx_status(url, tx_hashes, token, verify_cert=True):
     logger.debug("    requesting /txstatus/%s ..." % tx_hashes)
-    result = common_post_request(
+    g_result = common_post_request(
         url + '/txstatus',
         headers={'Authorization': 'Bearer ' + token},
         params={'data': json.dumps({'hashes': tx_hashes})}
     )
-    return result
+    print("get_tx_status 1 g_result: %s" % g_result)
+    results = {}
+    for h in tx_hashes:
+        result = g_result['results'][h] #['blockid']
+        print("get_tx_status 2 h: %s, result: %s" % (h, result))
+        logger.debug("result: %s" % result)
+        if 'errmsg' in result:
+            logger.debug("    'errmsg' key is present HEREEEEE!!!!")
+            raise TxStatusHasErrmsgError(errmsg_to_string(result['errmsg']),
+                        url=url, tx_hash=h, token=token,
+                        verify_cert=verify_cert, result=result)
+
+        if 'blockid' in result:
+            logger.debug("    'blockid' key is present")
+            if not result['blockid']:
+                logger.debug("'blockid' is empty")
+                raise TxStatusBlockIDIsEmptyError("blockid is EMPTY", url=url,
+                        tx_hash=h, token=token, verify_cert=verify_cert,
+                        result=result)
+        else:
+            logger.debug("    'blockid' key is absent")
+            raise TxStatusNoBlockIDKeyError("'blockid key is absent", url=url,
+                    tx_hash=h, token=token, verify_cert=verify_cert,
+                    result=result)
+        results[h] = result
+    return results
+
+def wait_tx_status(url, tx_hashes, token, timeout_secs=100, max_tries=100,
+                   gap_secs=1, verify_cert=True):
+
+    logger.debug("gap_secs: %d timeout_secs: %d max_tries: %d" %(gap_secs,
+        timeout_secs, max_tries))
+    end_time = time() + timeout_secs
+    results = None
+    cnt = 1
+    while True:
+        logger.debug("try %d", cnt)
+        no_block_id = False
+        try:
+            results = get_tx_status(url, tx_hashes, token,
+                                    verify_cert=verify_cert)
+            return results
+        except TxStatusNoBlockIDKeyError as e: 
+            no_block_id = True
+        except TxStatusBlockIDIsEmptyError as e:
+            no_block_id = True
+
+        logger.debug("no_block_id: %s" % no_block_id)
+
+        if time() > end_time:
+            logger.debug("time exceeded")
+            raise WaitTxStatusTimeoutError("time exceeded", url=url,
+                    tx_hash=tx_hashes,
+                    token=token,
+                    verify_cert=verify_cert, result=results,
+                    timeout_secs=timeout_secs, max_tries=max_tries,
+                    gap_secs=gap_secs, tx_status_error=e)
+        if cnt > max_tries:
+            logger.debug("max tries exceeded")
+            raise WaitTxStatusMaxTriesExceededError("max tries exceeded",
+                    url=url,
+                    tx_hash=tx_hashes,
+                    token=token, verify_cert=verify_cert, result=results,
+                    timeout_secs=timeout_secs, max_tries=max_tries,
+                    gap_secs=gap_secs, tx_status_error=e)
+        cnt += 1
+        sleep(gap_secs)
 
 def get_contract_info(url, token, name='', data='', verify_cert=True,
                       send_pub_key=True):
