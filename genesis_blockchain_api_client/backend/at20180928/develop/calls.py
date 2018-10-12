@@ -80,7 +80,7 @@ def get_tx_status(url, tx_hashes, token, verify_cert=True):
     return results
 
 def wait_tx_status(url, tx_hashes, token, timeout_secs=100, max_tries=100,
-                   gap_secs=1, verify_cert=True):
+                   gap_secs=1, show_indicator=True, verify_cert=True):
 
     logger.debug("gap_secs: %d timeout_secs: %d max_tries: %d" %(gap_secs,
         timeout_secs, max_tries))
@@ -88,6 +88,8 @@ def wait_tx_status(url, tx_hashes, token, timeout_secs=100, max_tries=100,
     results = None
     cnt = 1
     while True:
+        if show_indicator:
+            print("Waiting (%d seconds) for the completion of the transaction (try %d/%max_tries) ..." % (timeout_secs, cnt, max_tries))
         logger.debug("try %d", cnt)
         no_block_id = False
         try:
