@@ -217,7 +217,7 @@ def wait_tx_status(url, tx_hash, token, timeout_secs=100, max_tries=100,
     cnt=1
     while True:
         if show_indicator:
-            print("Waiting (%d seconds) for the completion of the transaction (try %d/%max_tries) ..." % (timeout_secs, cnt, max_tries))
+            print("Waiting (%d seconds) for the completion of the transaction (try %d/%d) ..." % (timeout_secs, cnt, max_tries))
         logger.debug("try %d", cnt)
         no_block_id = False
         try:
