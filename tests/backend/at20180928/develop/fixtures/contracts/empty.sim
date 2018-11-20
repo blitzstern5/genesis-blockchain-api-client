@@ -1,0 +1,10 @@
+contract MetricsUpdate {
+    data {
+    }
+    
+    conditions {
+    }
+
+    action {
+    }
+}
