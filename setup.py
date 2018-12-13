@@ -11,9 +11,8 @@ with open(os.path.join(here, 'README.md')) as f:
 requires = [
     'mock',
     'nose',
-    'requests==2.19.1',
+    'requests',
     'requests_toolbelt',
-    'urllib3',
     'ruamel.yaml',
     'PyYAML',
     'genesis-blockchain-tools',
