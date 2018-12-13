@@ -92,6 +92,7 @@ def wait_tx_status(url, tx_hashes, token, timeout_secs=100, max_tries=100,
             print("Waiting (%d seconds) for the completion of the transaction (try %d/%d) ..." % (timeout_secs, cnt, max_tries))
         logger.debug("try %d", cnt)
         no_block_id = False
+        e = None
         try:
             results = get_tx_status(url, tx_hashes, token,
                                     verify_cert=verify_cert)
