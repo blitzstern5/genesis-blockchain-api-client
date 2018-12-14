@@ -46,7 +46,9 @@ from ....utils import (
 )
 
 backend_version = get_latest_version()
+print("backend_version: %s" % backend_version)
 for option_name, option_value in version_to_options(backend_version).items():
+    print("option_name: %s opion_value: %s" % (option_name, option_value))
     globals()[option_name] = option_value
 
 use_mock = False
@@ -99,6 +101,66 @@ def NOtest_get_priv_key_from_env():
             print("Node %d Private Key: %s" % (node_ind, priv_key))
         except PrivKeyIsNotSetError as e:
             print("Node %d Private Key isn't set" % node_ind)
+
+class ApiUrlIsNotSetError(Error): pass
+
+def get_api_url_from_env(node_ind):
+    assert is_number(node_ind)
+    assert node_ind >= 1
+    api_url = os.environ.get('GENESIS_NODE%d_API_URL' % node_ind,
+                   os.environ.get('APLA_NODE%d_API_URL' % node_ind))
+    if not api_url:
+        raise ApiUrlIsNotSetError(api_url)
+    return api_url
+
+@with_setup(my_setup, my_teardown)
+def NOtest_get_api_url_from_env():
+    for node_ind in range(1, 6):
+        try:
+            api_url = get_api_url_from_env(node_ind)
+            print("Node %d API URL: %s" % (node_ind, api_url))
+        except ApiUrlIsNotSetError as e:
+            print("Node %d API URL isn't set" % node_ind)
+
+class KeyIdIsNotSetError(Error): pass
+
+def get_key_id_from_env(node_ind):
+    assert is_number(node_ind)
+    assert node_ind >= 1
+    key_id = os.environ.get('GENESIS_NODE%d_OWNER_KEY_ID' % node_ind,
+                   os.environ.get('APLA_NODE%d_OWNER_KEY_ID' % node_ind))
+    if not key_id:
+        raise KeyIdIsNotSetError(key_id)
+    return key_id
+
+@with_setup(my_setup, my_teardown)
+def NOtest_get_key_id_from_env():
+    for node_ind in range(1, 6):
+        try:
+            key_id = get_key_id_from_env(node_ind)
+            print("Node %d KeyID: %s" % (node_ind, key_id))
+        except KeyIdIsNotSetError as e:
+            print("Node %d KeyID isn't set" % node_ind)
+
+class PubKeyIsNotSetError(Error): pass
+
+def get_pub_key_from_env(node_ind):
+    assert is_number(node_ind)
+    assert node_ind >= 1
+    pub_key = os.environ.get('GENESIS_NODE%d_OWNER_PUB_KEY' % node_ind,
+                   os.environ.get('APLA_NODE%d_OWNER_PUB_KEY' % node_ind))
+    if not pub_key:
+        raise PubKeyIsNotSetError(pub_key)
+    return pub_key
+
+@with_setup(my_setup, my_teardown)
+def NOtest_get_pub_key_from_env():
+    for node_ind in range(1, 6):
+        try:
+            pub_key = get_pub_key_from_env(node_ind)
+            print("Node %d NodePublicKey: %s" % (node_ind, pub_key))
+        except PubKeyIsNotSetError as e:
+            print("Node %d NodePublicKey isn't set" % node_ind)
 
 @with_setup(my_setup, my_teardown)
 def NOtest_get_contract_info():
@@ -583,59 +645,78 @@ def NOtest_assign_apla_consensus_role():
                                           verify_cert=True)
     check_wait_tx_status_result(w_result)
 
+### AAA
 @with_setup(my_setup, my_teardown)
 def test_add_node_by_voting():
     # Auth 1
+    print("auth 1")
     priv_key = get_priv_key_from_env(1)
-    uid, token = get_uid(api_root_url)
-    l_result = login(api_root_url, priv_key, uid, token, sign_fmt=sign_fmt,
+    print("priv_key: %s" % priv_key)
+    assert api_root_url == get_api_url_from_env(1)
+    uid, token = get_uid(get_api_url_from_env(1))
+    print("uid: %s token: %s" % (uid, token))
+    l_result = login(get_api_url_from_env(1),
+                     priv_key, uid, token, sign_fmt=sign_fmt,
                      use_signtest=use_signtest, crypto_backend=crypto,
                      use_login_prefix=use_login_prefix,
                      pub_key_fmt=pub_key_fmt)
-    pub_key = crypto.get_public_key(priv_key)
-    account = public_key_to_address(bytes.fromhex(pub_key))
+    #pub_key = crypto.get_public_key(priv_key)
+    #account = public_key_to_address(bytes.fromhex(pub_key))
+    pub_key = get_pub_key_from_env(1)
+    account = get_key_id_from_env(1)
 
     tcp_address = '127.0.0.1:7078'
     api_address = 'http://localhost:7001' #/api/v2'
 
     # Auth 2
+    print("auth 2")
     priv_key2 = get_priv_key_from_env(2)
-    uid2, token2 = get_uid(api_root_url)
-    l_result2 = login(api_root_url, priv_key2, uid2, token2, sign_fmt=sign_fmt,
-                     use_signtest=use_signtest, crypto_backend=crypto,
-                     use_login_prefix=use_login_prefix,
-                     pub_key_fmt=pub_key_fmt)
-    pub_key2 = crypto.get_public_key(priv_key2)
-    account2 = public_key_to_address(bytes.fromhex(pub_key2))
+    print("priv_key2: %s" % priv_key2)
+    uid2, token2 = get_uid(get_api_url_from_env(1))
+    print("uid2: %s token2: %s" % (uid2, token2))
+    l_result2 = login(get_api_url_from_env(1),
+                      priv_key2, uid2, token2, sign_fmt=sign_fmt,
+                      use_signtest=use_signtest, crypto_backend=crypto,
+                      use_login_prefix=use_login_prefix,
+                      pub_key_fmt=pub_key_fmt)
+    #pub_key2 = crypto.get_public_key(priv_key2)
+    #account2 = public_key_to_address(bytes.fromhex(pub_key2))
+    pub_key2 = get_pub_key_from_env(2)
+    account2 = get_key_id_from_env(2)
     tcp_address2 = '127.0.0.1:7012'
     api_address2 = 'http://localhost:7002' #/api/v2'
 
 
     # Auth 3
     priv_key3 = get_priv_key_from_env(3)
-    uid3, token3 = get_uid(api_root_url)
-    l_result3 = login(api_root_url, priv_key3, uid3, token3, sign_fmt=sign_fmt,
-                     use_signtest=use_signtest, crypto_backend=crypto,
-                     use_login_prefix=use_login_prefix,
-                     pub_key_fmt=pub_key_fmt)
-    pub_key3 = crypto.get_public_key(priv_key3)
-    account3 = public_key_to_address(bytes.fromhex(pub_key3))
+    uid3, token3 = get_uid(get_api_url_from_env(1))
+    l_result3 = login(get_api_url_from_env(1),
+                      priv_key3, uid3, token3, sign_fmt=sign_fmt,
+                      use_signtest=use_signtest, crypto_backend=crypto,
+                      use_login_prefix=use_login_prefix,
+                      pub_key_fmt=pub_key_fmt)
+    #pub_key3 = crypto.get_public_key(priv_key3)
+    #account3 = public_key_to_address(bytes.fromhex(pub_key3))
+    pub_key3 = get_pub_key_from_env(3)
+    account3 = get_key_id_from_env(3)
     tcp_address3 = '127.0.0.1:7013'
     api_address3 = 'http://localhost:7003' #/api/v2'
-
+    #return
 
     # RolesInstall
-    w_result = install_roles(api_root_url, priv_key, l_result['token'],
+    w_result = install_roles(get_api_url_from_env(1),
+                             priv_key, l_result['token'],
                              verify_cert=True)
     check_wait_tx_status_result(w_result)
 
     # VotingTemplateInstall
-    w_result = install_voting_templates(api_root_url, priv_key,
+    w_result = install_voting_templates(get_api_url_from_env(1), priv_key,
                                         l_result['token'], verify_cert=True)
     check_wait_tx_status_result(w_result)
 
     # Edit Voting Sysparams Template ID
-    w_result = edit_app_param(api_root_url, priv_key, l_result['token'],
+    w_result = edit_app_param(get_api_url_from_env(1), priv_key,
+                              l_result['token'],
                               'voting_sysparams_template_id', 2)
     check_wait_tx_status_result(w_result)
 
@@ -795,114 +876,114 @@ def test_add_node_by_voting():
     except Exception as e:
         print("e3: %s" % e)
 
-@with_setup(my_setup, my_teardown)
-def NOtest_accept_voting_desicion():
-    # Auth 1
-    priv_key = get_priv_key_from_env(1)
-    uid, token = get_uid(api_root_url)
-    l_result = login(api_root_url, priv_key, uid, token, sign_fmt=sign_fmt,
-                     use_signtest=use_signtest, crypto_backend=crypto,
-                     use_login_prefix=use_login_prefix,
-                     pub_key_fmt=pub_key_fmt)
-    pub_key = crypto.get_public_key(priv_key)
-    account = public_key_to_address(bytes.fromhex(pub_key))
-
-    tcp_address = '127.0.0.1:7078'
-    api_address = 'http://localhost:7001' #/api/v2'
-
-    # Auth 2
-    priv_key2 = get_priv_key_from_env(2)
-    uid2, token2 = get_uid(api_root_url)
-    l_result2 = login(api_root_url, priv_key2, uid2, token2, sign_fmt=sign_fmt,
-                     use_signtest=use_signtest, crypto_backend=crypto,
-                     use_login_prefix=use_login_prefix,
-                     pub_key_fmt=pub_key_fmt)
-    pub_key2 = crypto.get_public_key(priv_key2)
-    account2 = public_key_to_address(bytes.fromhex(pub_key2))
-    tcp_address2 = '127.0.0.1:7012'
-    api_address2 = 'http://localhost:7002' #/api/v2'
-
-    # Auth 3
-    priv_key3 = get_priv_key_from_env(3)
-    uid3, token3 = get_uid(api_root_url)
-    l_result3 = login(api_root_url, priv_key3, uid3, token3, sign_fmt=sign_fmt,
-                     use_signtest=use_signtest, crypto_backend=crypto,
-                     use_login_prefix=use_login_prefix,
-                     pub_key_fmt=pub_key_fmt)
-    pub_key3 = crypto.get_public_key(priv_key3)
-    account3 = public_key_to_address(bytes.fromhex(pub_key3))
-    tcp_address3 = '127.0.0.1:7013'
-    api_address3 = 'http://localhost:7003' #/api/v2'
-
-    # Login with ADMIN role
-    uid_a, token_a = get_uid(api_root_url)
-    l_result_a = login(api_root_url, priv_key, uid_a, token_a,
-                       sign_fmt=sign_fmt, role_id=APLA_ADMIN_ROLE_ID,
-                       use_signtest=use_signtest, crypto_backend=crypto,
-                       use_login_prefix=use_login_prefix,
-                       pub_key_fmt=pub_key_fmt)
-
-    # Login with CONSENSUS role
-    uid_c, token_c = get_uid(api_root_url)
-    l_result_c = login(api_root_url, priv_key, uid_c, token_c,
-                       sign_fmt=sign_fmt, role_id=APLA_CONSENSUS_ROLE_ID,
-                       use_signtest=use_signtest, crypto_backend=crypto,
-                       use_login_prefix=use_login_prefix,
-                       pub_key_fmt=pub_key_fmt)
-
-    uid_c2, token_c2 = get_uid(api_root_url)
-    l_result_c2 = login(api_root_url, priv_key2, uid_c2, token_c2,
-                        sign_fmt=sign_fmt, role_id=APLA_CONSENSUS_ROLE_ID,
-                        use_signtest=use_signtest, crypto_backend=crypto,
-                        use_login_prefix=use_login_prefix,
-                        pub_key_fmt=pub_key_fmt)
-
-    uid_c3, token_c3 = get_uid(api_root_url)
-    l_result_c3 = login(api_root_url, priv_key3, uid_c3, token_c3,
-                        sign_fmt=sign_fmt, role_id=APLA_CONSENSUS_ROLE_ID,
-                        use_signtest=use_signtest, crypto_backend=crypto,
-                        use_login_prefix=use_login_prefix,
-                        pub_key_fmt=pub_key_fmt)
-
-    ### Voting 2 
-
-    # Add Node By Voting, votes Node 3 Owner
-    try:
-        w_result = add_node_by_voting(api_root_url, priv_key3,
-                                      l_result_c3['token'],
-                                      tcp_address3, api_address3, pub_key3,
-                                      duration=1, timeout_secs=200,
-                                      max_tries=200)
-        check_wait_tx_status_result(w_result)
-    except TxStatusHasErrmsgError as e:
-        print("ERROR: %s" % e)
-
-    # Update Voting Status
-    try:
-        update_voting_status(api_root_url, priv_key, l_result_a['token'],
-                             timeout_secs=200, max_tries=200)
-    except Exception as e:
-        print("e2: %s" % e)
-
-    ## Accept Voting Decission
-    try:
-        w_result = accept_voting_decision(api_root_url, priv_key3,
-                                          l_result_c3['token'], 2,
-                                          timeout_secs=200, max_tries=200)
-        check_wait_tx_status_result(w_result)
-    except Exception as e:
-        print("e: %s" % e)
-    try:
-        w_result = accept_voting_decision(api_root_url, priv_key,
-                                          l_result_c['token'], 2,
-                                          timeout_secs=200, max_tries=200)
-        check_wait_tx_status_result(w_result)
-    except Exception as e:
-        print("e3: %s" % e)
-    try:
-        w_result = accept_voting_decision(api_root_url, priv_key2,
-                                          l_result_c2['token'], 2,
-                                          timeout_secs=200, max_tries=200)
-        check_wait_tx_status_result(w_result)
-    except Exception as e:
-        print("e2: %s" % e)
+#@with_setup(my_setup, my_teardown)
+#def NOtest_accept_voting_desicion():
+#    # Auth 1
+#    priv_key = get_priv_key_from_env(1)
+#    uid, token = get_uid(api_root_url)
+#    l_result = login(api_root_url, priv_key, uid, token, sign_fmt=sign_fmt,
+#                     use_signtest=use_signtest, crypto_backend=crypto,
+#                     use_login_prefix=use_login_prefix,
+#                     pub_key_fmt=pub_key_fmt)
+#    pub_key = crypto.get_public_key(priv_key)
+#    account = public_key_to_address(bytes.fromhex(pub_key))
+#
+#    tcp_address = '127.0.0.1:7078'
+#    api_address = 'http://localhost:7001' #/api/v2'
+#
+#    # Auth 2
+#    priv_key2 = get_priv_key_from_env(2)
+#    uid2, token2 = get_uid(api_root_url)
+#    l_result2 = login(api_root_url, priv_key2, uid2, token2, sign_fmt=sign_fmt,
+#                     use_signtest=use_signtest, crypto_backend=crypto,
+#                     use_login_prefix=use_login_prefix,
+#                     pub_key_fmt=pub_key_fmt)
+#    pub_key2 = crypto.get_public_key(priv_key2)
+#    account2 = public_key_to_address(bytes.fromhex(pub_key2))
+#    tcp_address2 = '127.0.0.1:7012'
+#    api_address2 = 'http://localhost:7002' #/api/v2'
+#
+#    # Auth 3
+#    priv_key3 = get_priv_key_from_env(3)
+#    uid3, token3 = get_uid(api_root_url)
+#    l_result3 = login(api_root_url, priv_key3, uid3, token3, sign_fmt=sign_fmt,
+#                     use_signtest=use_signtest, crypto_backend=crypto,
+#                     use_login_prefix=use_login_prefix,
+#                     pub_key_fmt=pub_key_fmt)
+#    pub_key3 = crypto.get_public_key(priv_key3)
+#    account3 = public_key_to_address(bytes.fromhex(pub_key3))
+#    tcp_address3 = '127.0.0.1:7013'
+#    api_address3 = 'http://localhost:7003' #/api/v2'
+#
+#    # Login with ADMIN role
+#    uid_a, token_a = get_uid(api_root_url)
+#    l_result_a = login(api_root_url, priv_key, uid_a, token_a,
+#                       sign_fmt=sign_fmt, role_id=APLA_ADMIN_ROLE_ID,
+#                       use_signtest=use_signtest, crypto_backend=crypto,
+#                       use_login_prefix=use_login_prefix,
+#                       pub_key_fmt=pub_key_fmt)
+#
+#    # Login with CONSENSUS role
+#    uid_c, token_c = get_uid(api_root_url)
+#    l_result_c = login(api_root_url, priv_key, uid_c, token_c,
+#                       sign_fmt=sign_fmt, role_id=APLA_CONSENSUS_ROLE_ID,
+#                       use_signtest=use_signtest, crypto_backend=crypto,
+#                       use_login_prefix=use_login_prefix,
+#                       pub_key_fmt=pub_key_fmt)
+#
+#    uid_c2, token_c2 = get_uid(api_root_url)
+#    l_result_c2 = login(api_root_url, priv_key2, uid_c2, token_c2,
+#                        sign_fmt=sign_fmt, role_id=APLA_CONSENSUS_ROLE_ID,
+#                        use_signtest=use_signtest, crypto_backend=crypto,
+#                        use_login_prefix=use_login_prefix,
+#                        pub_key_fmt=pub_key_fmt)
+#
+#    uid_c3, token_c3 = get_uid(api_root_url)
+#    l_result_c3 = login(api_root_url, priv_key3, uid_c3, token_c3,
+#                        sign_fmt=sign_fmt, role_id=APLA_CONSENSUS_ROLE_ID,
+#                        use_signtest=use_signtest, crypto_backend=crypto,
+#                        use_login_prefix=use_login_prefix,
+#                        pub_key_fmt=pub_key_fmt)
+#
+#    ### Voting 2 
+#
+#    # Add Node By Voting, votes Node 3 Owner
+#    try:
+#        w_result = add_node_by_voting(api_root_url, priv_key3,
+#                                      l_result_c3['token'],
+#                                      tcp_address3, api_address3, pub_key3,
+#                                      duration=1, timeout_secs=200,
+#                                      max_tries=200)
+#        check_wait_tx_status_result(w_result)
+#    except TxStatusHasErrmsgError as e:
+#        print("ERROR: %s" % e)
+#
+#    # Update Voting Status
+#    try:
+#        update_voting_status(api_root_url, priv_key, l_result_a['token'],
+#                             timeout_secs=200, max_tries=200)
+#    except Exception as e:
+#        print("e2: %s" % e)
+#
+#    ## Accept Voting Decission
+#    try:
+#        w_result = accept_voting_decision(api_root_url, priv_key3,
+#                                          l_result_c3['token'], 2,
+#                                          timeout_secs=200, max_tries=200)
+#        check_wait_tx_status_result(w_result)
+#    except Exception as e:
+#        print("e: %s" % e)
+#    try:
+#        w_result = accept_voting_decision(api_root_url, priv_key,
+#                                          l_result_c['token'], 2,
+#                                          timeout_secs=200, max_tries=200)
+#        check_wait_tx_status_result(w_result)
+#    except Exception as e:
+#        print("e3: %s" % e)
+#    try:
+#        w_result = accept_voting_decision(api_root_url, priv_key2,
+#                                          l_result_c2['token'], 2,
+#                                          timeout_secs=200, max_tries=200)
+#        check_wait_tx_status_result(w_result)
+#    except Exception as e:
+#        print("e2: %s" % e)

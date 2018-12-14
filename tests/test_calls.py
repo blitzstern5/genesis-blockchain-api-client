@@ -57,9 +57,9 @@ from genesis_blockchain_api_client.backend.versions import (
 #backend_version = '201806XX'
 #backend_version = '20180830'
 backend_version = get_latest_version()
-#print("backend version: %s" % backend_version)
+print("backend version: %s" % backend_version)
 for option_name, option_value in version_to_options(backend_version).items():
-    #print("backend option: %s='%s'" % (option_name, option_value))
+    print("backend option: %s='%s'" % (option_name, option_value))
     globals()[option_name] = option_value
 
 class MockResponse:
