@@ -29,9 +29,7 @@ from genesis_blockchain_api_client.backend.versions import (
 crypto = import_crypto_by_backend('cryptography')
 
 backend_version = get_latest_version()
-print("full_nodes_voting: backend_version: %s" % backend_version)
 for option_name, option_value in version_to_options(backend_version).items():
-    print("full_nodes_voting: %s=%s" % (option_name, option_value))
     globals()[option_name] = option_value
 
 
