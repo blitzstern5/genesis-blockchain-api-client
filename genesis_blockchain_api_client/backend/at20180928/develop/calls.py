@@ -270,7 +270,6 @@ def edit_profile(url, priv_key, token, ecosystem_id=1, verify_cert=True,
         params['information'] = kwargs.get('information')
     if 'image_id' in kwargs:
         params['image_id'] = kwargs.get('image_id')
-    print("edit_profile 1 params: %s" % params)
     return call_contract(url, priv_key, token, 'ProfileEdit', params,
                          ecosystem_id=ecosystem_id, verify_cert=verify_cert,
                          wait_tx=wait_tx, timeout_secs=timeout_secs,
@@ -366,7 +365,6 @@ def add_node_by_voting(url, priv_key, token, tcp_address, api_address, pub_key,
         key_id = public_key_to_address(bytes.fromhex(pub_key))
     params = {'TcpAddress': tcp_address, 'ApiAddress': api_address,
               'KeyId': key_id, 'PubKey': pub_key, 'Duration': duration}
-    print("params: %s" % params)
     return call_contract(url, priv_key, token, 'VotingNodeAdd', params,
                          ecosystem_id=ecosystem_id, verify_cert=verify_cert,
                          wait_tx=wait_tx, timeout_secs=timeout_secs,
