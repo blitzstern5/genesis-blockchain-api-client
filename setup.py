@@ -2,7 +2,7 @@ import os
 
 from setuptools import setup, find_packages
 
-__VERSION__ = '0.2.0'
+__VERSION__ = '0.2.1'
 
 here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'README.md')) as f:
@@ -11,7 +11,7 @@ with open(os.path.join(here, 'README.md')) as f:
 requires = [
     'mock',
     'nose',
-    'requests==2.19.1',
+    'requests',
     'requests_toolbelt',
     'urllib3',
     'ruamel.yaml',
