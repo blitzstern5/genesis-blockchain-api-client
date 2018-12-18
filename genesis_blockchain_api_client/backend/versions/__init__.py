@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 feature_options_map = {
     'login_prefix_in_login_call': {
         'desc': "use LOGIN + UID in /login calls",
@@ -68,6 +70,14 @@ feature_options_map = {
         'targets': ('block-explorer',),
     },
 }
+
+version_features_keys_order = [
+    '201802XX',
+    '20180512', 
+    '201806XX', 
+    '20180830', 
+    '20180902', 
+]
 
 version_features_map = {
     '201802XX': {
@@ -150,7 +160,7 @@ class NoSuchBackendFeatureError(Exception):
     pass
 
 def get_available_versions():
-    return tuple(version_features_map.keys())
+    return tuple(version_features_keys_order)
 
 def get_latest_version():
     versions = get_available_versions()

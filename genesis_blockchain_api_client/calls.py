@@ -20,6 +20,17 @@ from .blockchain.block_set import BlockSet
 
 logger = logging.getLogger(__name__)
 
+GENESIS_COMMON_ROLE_ID    = APLA_COMMON_ROLE_ID    = 0
+GENESIS_ADMIN_ROLE_ID     = APLA_ADMIN_ROLE_ID     = 1
+GENESIS_DEVELOPER_ROLE_ID = APLA_DEVELOPER_ROLE_ID = 2
+GENESIS_CONSENSUS_ROLE_ID = APLA_CONSENSUS_ROLE_ID = 3
+GENESIS_CANDIADATE_FOR_VALIDATORS_ROLE_ID = \
+             APLA_CANDIADATE_FOR_VALIDATORS_ROLE_ID= 4
+GENESIS_VALIDATOR_ROLE_ID = APLA_VALIDATOR_ROLE_ID = 5
+GENESIS_INVESTOR_WITH_VOTING_RIGHTS_ROLE_ID = \
+          APLA_INVESTOR_WITH_VOTING_RIGHTS_ROLE_ID = 6
+GENESIS_DELEGATE_ROLE_ID  = APLA_DELEGATE_ROLE_ID  = 7
+
 def raise_resp_error(resp, do_resp_dump=True):
     logger.debug("type(resp): % resp: %s" % (type(resp), resp))
     try:
@@ -103,15 +114,15 @@ def sign_or_signtest(url, priv_key, data, sign_fmt='DER', use_signtest=False,
     return signature, pub_key
 
 def login(url, priv_key, uid, token, sign_fmt='DER', use_signtest=False,
-          verify_cert=True, crypto_backend=crypto, sign_tries=1,
-          use_login_prefix=True, pub_key_fmt='04'):
+          verify_cert=True, crypto_backend=crypto, sign_tries=1, role_id=None,
+          use_login_prefix=True, pub_key_fmt='04', ecosystem_id=None):
     if use_login_prefix:
-        data = "LOGIN" + uid
+        s_data = "LOGIN" + uid
     else:
-        data = uid
+        s_data = uid
     result = None
     for i in range(0, sign_tries):
-        signature, pub_key = sign_or_signtest(url, priv_key, data,
+        signature, pub_key = sign_or_signtest(url, priv_key, s_data,
                                               sign_fmt=sign_fmt,
                                               use_signtest=use_signtest,
                                               verify_cert=verify_cert,
@@ -119,11 +130,16 @@ def login(url, priv_key, uid, token, sign_fmt='DER', use_signtest=False,
                                               pub_key_fmt=pub_key_fmt)
         logger.debug("use_signtest: %s pub_key: %s, signature: %s" \
                      % (use_signtest, pub_key, signature)) 
+        data={'pubkey': pub_key, 'signature': signature}
+        if not ecosystem_id is None:
+            data['ecosystem'] = ecosystem_id
+        if not role_id is None:
+            data['role_id'] = role_id
         try:
             result = common_post_request(
                 url + '/login',
                 headers={'Authorization': 'Bearer ' + token},
-                data={'pubkey': pub_key, 'signature': signature},
+                data=data,
                 verify_cert=verify_cert
             )
             result.update({'pub_key': pub_key, 'signature': signature})
@@ -276,7 +292,7 @@ def get_block_data(url, block_id, verify_cert=True):
 
 
 def get_detailed_blocks_data(url, block_id, count=None, verify_cert=True):
-    params = {'block_id': block_id, 'verify_cert': verify_cert}
+    params = {'block_id': block_id}
     if count:
         params.update(count=count)
     return common_get_request(url + '/detailed_blocks', params=params,

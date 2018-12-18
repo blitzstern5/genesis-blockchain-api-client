@@ -164,33 +164,46 @@ class ExceptionWithKwargs(Exception):
         super(ExceptionWithKwargs, self).__init__(*args)
         self.__dict__.update(kwargs)
 
-class TxStatusError(ExceptionWithKwargs):
+class ExceptionWithKnownKwargs(ExceptionWithKwargs):
     def __init__(self, *args, **kwargs):
-        super(TxStatusError, self).__init__(*args, **kwargs)
-        params = ('url', 'tx_hash', 'token', 'verify_cert', 'result')
-        for param in params:
+        if not hasattr(self, 'param_names'):
+            self.param_names = []
+        msg_addon = ''
+        for param in self.param_names:
             setattr(self, param, kwargs.get(param, None))
-            logger.debug("self.%s = %s" % (param, getattr(self, param)))
+            #logger.debug("self.%s = %s" % (param, getattr(self, param)))
+            if msg_addon:
+                msg_addon += ' '
+            msg_addon += "%s='%s'" % (param, getattr(self, param))
+
+        if len(args) > 0:
+            m = args[0] + ' ' + msg_addon
+            args = (m,) + args[1:]
+        super(ExceptionWithKnownKwargs, self).__init__(*args, **kwargs)
+
+class TxStatusError(ExceptionWithKnownKwargs):
+    def __init__(self, *args, **kwargs):
+        if not hasattr(self, 'param_names'):
+            self.param_names = ['url', 'tx_hash', 'token', 'verify_cert',   
+                                'result']
+        super(TxStatusError, self).__init__(*args, **kwargs)
 
 class TxStatusHasErrmsgError(TxStatusError):
     pass
 
 class TxStatusNoBlockIDKeyError(TxStatusError):
-    def __init__(self, *args, **kwargs):
-        super(TxStatusNoBlockIDError, self).__init__(*args, **kwargs)
+    pass
 
 class TxStatusBlockIDIsEmptyError(TxStatusError):
-    def __init__(self, *args, **kwargs):
-        super(TxStatusBlockIDIsEmptyError, self).__init__(*args, **kwargs)
+    pass
 
 class WaitTxStatusError(TxStatusError):
     def __init__(self, *args, **kwargs):
+        if not hasattr(self, 'param_names'):
+            self.param_names = ['url', 'tx_hash', 'token', 'verify_cert',
+                                'result', 'timeout_secs', 'max_tries',
+                                'gap_secs', 'tx_status_error']
         super(WaitTxStatusError, self).__init__(*args, **kwargs)
-        params = ('timeout_secs', 'max_tries', 'gap_secs',
-                  'tx_status_error')
-        for param in params:
-            setattr(self, param, kwargs.get(param, None))
-            logger.debug("self.%s = %s" % (param, getattr(self, param)))
 
 class WaitTxStatusTimeoutError(WaitTxStatusError):
     pass

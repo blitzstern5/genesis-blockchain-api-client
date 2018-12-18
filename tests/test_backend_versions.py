@@ -24,7 +24,8 @@ def test_get_available_versions():
 
 @with_setup(my_setup, my_teardown)
 def test_get_latest_version():
-    assert get_latest_version() == '20180902'
+    for i in range(0, 30):
+        assert get_latest_version() == '20180902'
 
 @with_setup(my_setup, my_teardown)
 def test_get_features():

@@ -5,4 +5,5 @@ requests_toolbelt
 urllib3
 PyYAML
 ruamel.yaml
+puremagic
 git+https://github.com/blitzstern5/genesis-blockchain-tools@feature/send-tx
