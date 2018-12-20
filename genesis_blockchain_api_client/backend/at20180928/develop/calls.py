@@ -328,6 +328,9 @@ def import_data(url, priv_key, token, data, ecosystem_id=1, verify_cert=True,
 
 ### Full Nodes Voting ### begin ###
 
+def url_to_address(url):
+    return urllib.parse.urlunparse(tuple(urllib.parse.urlparse(url))[:-4] + tuple((',' * 3).split(',')))
+
 def install_roles(url, priv_key, token, ecosystem_id=1, verify_cert=True,
                   wait_tx=True, timeout_secs=20, max_tries=20, gap_secs=1):
     s_result = call_contract(url, priv_key, token, 'RolesInstall', {},

@@ -18,7 +18,7 @@ from genesis_blockchain_api_client.backend.at20180928.develop.calls import (
     get_uid, login, install_roles, install_voting_templates, assign_role,
     assign_apla_consensus_role, edit_app_param, edit_profile,
     add_node_by_voting, update_voting_status,
-    accept_voting_decision,
+    accept_voting_decision, url_to_address
 )
 
 from genesis_blockchain_api_client.backend.versions import (
@@ -43,9 +43,6 @@ def get_var_from_env(node_ind, templates):
         if value is not None:
             break
     return value
-
-def url_to_address(url):
-    return urllib.parse.urlunparse(tuple(urllib.parse.urlparse(url))[:-4] + tuple((',' * 3).split(',')))
 
 def get_vars_from_env(templates_map, max_node_ind, min_node_ind=1):
     data = OrderedDict()
