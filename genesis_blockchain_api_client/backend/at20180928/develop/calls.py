@@ -415,7 +415,6 @@ def update_sys_params(url, priv_key, token, name_value_dict, ecosystem_id=1,
             'params': {"Name": str(name).rstrip(), "Value": str(value).rstrip()}
         })
 
-    print("update_sys_params data: %s" % data)
     return call_multi_contract(url, priv_key, token, data,
                          ecosystem_id=ecosystem_id, verify_cert=verify_cert,
                          wait_tx=wait_tx, timeout_secs=timeout_secs,
