@@ -403,7 +403,6 @@ def update_sys_param(url, priv_key, token, name, value, ecosystem_id=1,
                      verify_cert=True, wait_tx=True, timeout_secs=20,
                      max_tries=20, gap_secs=1):
     params = {"Name": str(name).rstrip(), "Value": str(value).rstrip()}
-    print("update_sys_param params: %s" % params)
     return call_contract(url, priv_key, token, 'UpdateSysParam', params,
                          ecosystem_id=ecosystem_id, verify_cert=verify_cert,
                          wait_tx=wait_tx, timeout_secs=timeout_secs,
