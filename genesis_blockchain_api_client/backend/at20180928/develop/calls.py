@@ -1,6 +1,7 @@
 from time import time, sleep
 import json
 import logging 
+import urllib
 
 import puremagic
 from puremagic.main import PureError

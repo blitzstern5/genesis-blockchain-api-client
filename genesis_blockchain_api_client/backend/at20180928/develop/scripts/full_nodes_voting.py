@@ -1,5 +1,4 @@
 import json
-import urllib
 import os
 from collections import OrderedDict
 

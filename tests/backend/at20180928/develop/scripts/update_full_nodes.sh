@@ -14,13 +14,19 @@ priv_key="$($qs_bin priv-key 1)"
 
 api_url="$($qs_bin api-url 1)"
 
-node_key_ids=$($qs_bin key-ids | sed -E 's/([0-9]+): (.*)$/--node-key-id=\2/' | tr -d '\r' | tr '\n' ' ')
+key_ids=$($qs_bin key-ids | sed -E 's/([0-9]+): (.*)$/--node-key-id=\2/' | tr -d '\r' | tr '\n' ' ')
 
-node_api_urls=$($qs_bin int-api-urls | sed -E 's/([0-9]+): (.*)$/--node-api-url=\2/' | tr -d '\r' | tr '\n' ' ')
+api_urls=$($qs_bin int-api-urls | sed -E 's/([0-9]+): (.*)$/--node-api-url=\2/' | tr -d '\r' | tr '\n' ' ')
 
-echo "node_key_ids: $node_key_ids"
-echo "node_api_urls: $node_api_urls"
+tcp_addrs=$($qs_bin int-tcp-addrs | sed -E 's/([0-9]+): (.*)$/--node-tcp-addr=\2/' | tr -d '\r' | tr '\n' ' ')
 
-str="(cd $proj_dir && PYTHONPATH=$proj_dir $python_bin $this_dir/update_sys_param.py --call-priv-key=$priv_key --call-api-url=$api_url --node-api-addr=http://127.0.0.1:7078 --nodename=new_version_url --value=some.url.site)"
-echo "Sstr"
-#eval "$str"
+pub_keys=$($qs_bin pub-keys | sed -E 's/([0-9]+): (.*)$/--node-pub-key=\2/' | tr -d '\r' | tr '\n' ' ')
+
+#echo "key_ids: $key_ids"
+#echo "api_urls: $api_urls"
+#echo "tcp_addrs: $tcp_addrs"
+#echo "pub_keys: $pub_keys"
+
+str="(cd $proj_dir && PYTHONPATH=$proj_dir $python_bin $this_dir/update_full_nodes.py --call-priv-key=$priv_key --call-api-url=$api_url $key_ids $api_urls $tcp_addrs $pub_keys)"
+echo "$str"
+eval "$str"
