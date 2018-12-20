@@ -325,6 +325,9 @@ def import_data(url, priv_key, token, data, ecosystem_id=1, verify_cert=True,
                                timeout_secs=timeout_secs, max_tries=max_tries,
                                gap_secs=gap_secs)
 
+
+### Full Nodes Voting ### begin ###
+
 def install_roles(url, priv_key, token, ecosystem_id=1, verify_cert=True,
                   wait_tx=True, timeout_secs=20, max_tries=20, gap_secs=1):
     s_result = call_contract(url, priv_key, token, 'RolesInstall', {},
@@ -386,3 +389,21 @@ def accept_voting_decision(url, priv_key, token, account, ecosystem_id=1,
                          ecosystem_id=ecosystem_id, verify_cert=verify_cert,
                          wait_tx=wait_tx, timeout_secs=timeout_secs,
                          max_tries=max_tries, gap_secs=gap_secs)
+
+### Full Nodes Voting #### end ####
+
+
+### UpdateSysParam ### begin ###
+
+def update_sys_param(url, priv_key, token, name, value, ecosystem_id=1,
+                     verify_cert=True, wait_tx=True, timeout_secs=20,
+                     max_tries=20, gap_secs=1):
+    params = {"Name": str(name).rstrip(), "Value": str(value).rstrip()}
+    print("update_sys_param params: %s" % params)
+    #return call_contract(url, priv_key, token, 'UpdateSysParam', params,
+    return call_contract(url, priv_key, token, 'UpdateSysParam', params,
+                         ecosystem_id=ecosystem_id, verify_cert=verify_cert,
+                         wait_tx=wait_tx, timeout_secs=timeout_secs,
+                         max_tries=max_tries, gap_secs=gap_secs)
+
+### UpdateSysParam #### end ####

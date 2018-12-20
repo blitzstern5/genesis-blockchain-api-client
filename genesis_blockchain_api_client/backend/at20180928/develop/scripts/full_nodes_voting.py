@@ -25,7 +25,6 @@ from genesis_blockchain_api_client.backend.versions import (
     version_to_options, get_latest_version
 )
 
-
 crypto = import_crypto_by_backend('cryptography')
 
 backend_version = get_latest_version()
