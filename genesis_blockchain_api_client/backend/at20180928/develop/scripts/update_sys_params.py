@@ -95,12 +95,12 @@ def get_update_sys_params_args():
                         help='Run in non-debug mode')
     parser.set_defaults(debug=False)
     args = parser.parse_args()
-    params = []
+    params = {}
     if hasattr(args, 'name') and hasattr(args, 'value') \
             and len(args.name) == len(args.value):
         i = 0
         for name in args.name:
-            params.append({name[0]: args.value[i][0]})
+            params[name[0]] = args.value[i][0]
             i += 1
     return args.api_url, args.priv_key, params
 
