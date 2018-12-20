@@ -55,8 +55,8 @@ def update_sys_params(url, priv_key, name_value_map,
                      use_login_prefix=use_login_prefix,
                      pub_key_fmt=pub_key_fmt)
 
-    _update_sys_param(url, priv_key, l_result['token'],
-                      name, value, ecosystem_id=1,
+    _update_sys_params(url, priv_key, l_result['token'],
+                      name_value_map, ecosystem_id=1,
                       verify_cert=True, wait_tx=True, timeout_secs=20,
                       max_tries=20, gap_secs=1)
 
