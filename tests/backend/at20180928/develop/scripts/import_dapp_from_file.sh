@@ -16,5 +16,5 @@ api_url="$($qs_bin api-url 1)"
 contracts_dir="$(cd $this_dir/../fixtures/contracts && pwd)"
 path="$contracts_dir/empty.json"
 
-str="(cd $proj_dir && PYTHONPATH=$proj_dir $python_bin $this_dir/import_dapp_from_file.py --priv-key=$priv_key --api-url=$api_url --path=$path)"
+str="(cd $proj_dir && PYTHONPATH=$proj_dir $python_bin $this_dir/import_dapp_from_file.py --priv-key=$priv_key --api-url=$api_url --path=$path --timeout-secs=200 --max-tries=100)"
 eval "$str"
