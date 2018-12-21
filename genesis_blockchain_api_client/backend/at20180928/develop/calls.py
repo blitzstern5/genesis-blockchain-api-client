@@ -425,3 +425,23 @@ def update_sys_params(url, priv_key, token, name_value_dict, ecosystem_id=1,
 
 
 ### UpdateSysParam #### end ####
+
+
+### Update Keys ### begin ###
+
+def update_keys_raw(url, priv_key, token, keys_data, ecosystem_id=1,
+                    verify_cert=True, wait_tx=True, timeout_secs=20,
+                    max_tries=20, gap_secs=1):
+    data = []
+    for key_id, key_data in keys_data.items():
+        data.append({
+            'contract': 'UpdateKeysRaw',
+            'params': {"Id": str(key_id).rstrip(),
+                       "Pub": str(key_data['pub_key']).rstrip()}
+        })
+    return call_multi_contract(url, priv_key, token, data,
+                         ecosystem_id=ecosystem_id, verify_cert=verify_cert,
+                         wait_tx=wait_tx, timeout_secs=timeout_secs,
+                         max_tries=max_tries, gap_secs=gap_secs)
+
+### Update Keys #### end ####
