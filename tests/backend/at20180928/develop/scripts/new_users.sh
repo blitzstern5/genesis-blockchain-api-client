@@ -18,10 +18,9 @@ pub_keys=$($qs_bin pub-keys |  tail -n +2 | sed -E 's/([0-9]+): (.*)$/--pub-key=
 
 amounts=$($qs_bin key-ids |  tail -n +2 | sed -E 's/([0-9]+): (.*)$/--amount=1000000000000000000000/' | tr -d '\r' | tr '\n' ' ')
 
-#echo "key_ids: $key_ids"
-echo "pub_keys: $pub_keys"
-echo "amounts: $amounts"
+#echo "pub_keys: $pub_keys"
+#echo "amounts: $amounts"
 
-str="(cd $proj_dir && PYTHONPATH=$proj_dir $python_bin $this_dir/update_keys_raw.py --priv-key=$priv_key --api-url=$api_url $key_ids $pub_keys $amounts)"
-echo "str: $str"
-#eval "$str"
+str="(cd $proj_dir && PYTHONPATH=$proj_dir $python_bin $this_dir/new_users.py --priv-key=$priv_key --api-url=$api_url $key_ids $pub_keys $amounts)"
+#echo "str: $str"
+eval "$str"

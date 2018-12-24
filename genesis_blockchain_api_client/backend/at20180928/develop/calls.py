@@ -450,7 +450,7 @@ def new_users(url, priv_key, token, keys_data, ecosystem_id=1,
     data = []
     for pub_key, key_data in keys_data.items():
         data.append({
-            'contract': 'UpdateKeysRaw',
+            'contract': 'NewUser',
             'params': {"NewPubkey": pub_key},
         })
     return call_multi_contract(url, priv_key, token, data,

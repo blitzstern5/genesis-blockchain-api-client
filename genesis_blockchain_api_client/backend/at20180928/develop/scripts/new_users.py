@@ -58,15 +58,15 @@ def get_new_users_args():
     parser.set_defaults(debug=False)
     args = parser.parse_args()
     params = {}
-    if (hasattr(args, 'pub_key' and hasattr(args, 'amount') \
+    if (hasattr(args, 'pub_key') and hasattr(args, 'amount') \
             and len(args.pub_key) == len(args.amount)) \
             or hasattr(args, 'pub_key'):
         i = 0
         for pub_key in args.pub_key:
             _pub_key = pub_key[0].rstrip()
             params[_pub_key] = {}
-            if hasattr(args.amount): 
-                params[_pub_key]['amount'] = args.amount[i][0]}
+            if hasattr(args, 'amount'): 
+                params[_pub_key]['amount'] = str(args.amount[i][0]).rstrip()
             i += 1
     return args.api_url, args.priv_key, params
 
