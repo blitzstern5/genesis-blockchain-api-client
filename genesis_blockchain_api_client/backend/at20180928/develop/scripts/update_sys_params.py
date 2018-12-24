@@ -81,14 +81,12 @@ def get_update_sys_param_args():
 
 def get_update_sys_params_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--priv-key',
-                        help='Private Key'),
-    parser.add_argument('--api-url',
-                        help='Backend API URL')
+    parser.add_argument('--priv-key', required=True, help='Private Key'),
+    parser.add_argument('--api-url', required=True, help='Backend API URL')
     parser.add_argument('-n', '--name', action='append', nargs=1,
-                        help='System Parameter Name')
+                        required=True, help='System Parameter Name')
     parser.add_argument('-v', '--value', action='append', nargs=1,
-                        help='System Parameter Value')
+                        required=True, help='System Parameter Value')
     parser.add_argument('--debug', dest='debug', action='store_true',
                         help='Run in debug mode')
     parser.add_argument('--no-debug', dest='debug', action='store_false',

@@ -52,9 +52,9 @@ def import_dapp_from_file(url, priv_key, path,
 
 def get_import_dapp_from_file_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--priv-key', help='Private Key'),
-    parser.add_argument('--api-url', help='Backend API URL')
-    parser.add_argument('--path', help='Path to DApp')
+    parser.add_argument('--priv-key', required=True, help='Private Key'),
+    parser.add_argument('--api-url', required=True, help='Backend API URL')
+    parser.add_argument('--path', required=True, help='Path to DApp')
     parser.add_argument('--timeout-secs', default=150,
                         help='Timeout in seconds')
     parser.add_argument('--max-tries', default=150,

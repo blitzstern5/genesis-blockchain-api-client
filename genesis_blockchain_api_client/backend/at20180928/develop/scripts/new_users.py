@@ -43,14 +43,11 @@ def new_users(url, priv_key, keys_data,
 
 def get_new_users_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--priv-key',
-                        help='Private Key'),
-    parser.add_argument('--api-url',
-                        help='Backend API URL')
-    parser.add_argument('--pub-key', action='append', nargs=1,
+    parser.add_argument('--priv-key', required=True, help='Private Key'),
+    parser.add_argument('--api-url', required=True, help='Backend API URL')
+    parser.add_argument('--pub-key', action='append', nargs=1, required=True,
                         help='Public Key')
-    parser.add_argument('--amount', action='append', nargs=1,
-                        help='Amount')
+    parser.add_argument('--amount', action='append', nargs=1, help='Amount')
     parser.add_argument('--debug', dest='debug', action='store_true',
                         help='Run in debug mode')
     parser.add_argument('--no-debug', dest='debug', action='store_false',

@@ -44,18 +44,18 @@ def update_sys_param(url, priv_key, name, value,
 
 def get_update_full_nodes_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--call-priv-key',
+    parser.add_argument('--call-priv-key', required=True,
                         help='Private Key to call full nodes update'),
-    parser.add_argument('--call-api-url',
+    parser.add_argument('--call-api-url', required=True,
                         help='Backend API URL to call full nodes update')
     parser.add_argument('--node-api-url', action='append', nargs=1,
-                        help='Node API URL"')
+                        required=True, help='Node API URL"')
     parser.add_argument('--node-tcp-addr', action='append', nargs=1,
-                        help='Node TCP address')
+                        required=True, help='Node TCP address')
     parser.add_argument('--node-key-id', action='append', nargs=1,
-                        help='Node key ID')
+                        required=True, help='Node key ID')
     parser.add_argument('--node-pub-key', action='append', nargs=1,
-                        help='Node public key')
+                        required=True, help='Node public key')
     parser.add_argument('--debug', dest='debug', action='store_true',
                         help='Run in debug mode')
     parser.add_argument('--no-debug', dest='debug', action='store_false',
