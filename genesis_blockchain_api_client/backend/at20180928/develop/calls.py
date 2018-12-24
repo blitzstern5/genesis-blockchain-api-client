@@ -444,4 +444,18 @@ def update_keys_raw(url, priv_key, token, keys_data, ecosystem_id=1,
                          wait_tx=wait_tx, timeout_secs=timeout_secs,
                          max_tries=max_tries, gap_secs=gap_secs)
 
+def new_users(url, priv_key, token, keys_data, ecosystem_id=1,
+             verify_cert=True, wait_tx=True, timeout_secs=20,
+             max_tries=20, gap_secs=1):
+    data = []
+    for pub_key, key_data in keys_data.items():
+        data.append({
+            'contract': 'UpdateKeysRaw',
+            'params': {"NewPubkey": pub_key},
+        })
+    return call_multi_contract(url, priv_key, token, data,
+                         ecosystem_id=ecosystem_id, verify_cert=verify_cert,
+                         wait_tx=wait_tx, timeout_secs=timeout_secs,
+                         max_tries=max_tries, gap_secs=gap_secs)
+
 ### Update Keys #### end ####
