@@ -1,0 +1,12 @@
+{
+    "name": "System",
+    "conditions": "true",
+    "data": [
+        {
+            "Name": "TestEmpty",
+            "Conditions": "true",
+            "Value": "contract TestEmpty {\n    data { }\n    conditions { }\n   action {  }\n}",
+            "Type": "contracts"
+        }
+    ]
+}

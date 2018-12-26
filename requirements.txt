@@ -5,4 +5,5 @@ requests_toolbelt
 urllib3
 PyYAML
 ruamel.yaml
-git+https://github.com/blitzstern5/genesis-blockchain-tools
+puremagic
+git+https://github.com/blitzstern5/genesis-blockchain-tools@v0.2.1

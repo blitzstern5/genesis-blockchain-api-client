@@ -1,0 +1,13 @@
+contract MetricsUpdate {
+    data {}
+    
+    conditions {
+    }
+
+    action {
+        var m money
+        while m < Money("1000000000000000000000") {
+            m = m + Money(1)
+        }
+    }
+}

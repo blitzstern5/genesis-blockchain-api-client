@@ -16,3 +16,4 @@ def test_camel_to_snake():
     }
     for src, dst_exp in m.items():
         assert camel_to_snake(src) == dst_exp
+

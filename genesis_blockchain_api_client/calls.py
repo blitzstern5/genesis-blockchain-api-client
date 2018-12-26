@@ -20,6 +20,17 @@ from .blockchain.block_set import BlockSet
 
 logger = logging.getLogger(__name__)
 
+GENESIS_COMMON_ROLE_ID    = APLA_COMMON_ROLE_ID    = 0
+GENESIS_ADMIN_ROLE_ID     = APLA_ADMIN_ROLE_ID     = 1
+GENESIS_DEVELOPER_ROLE_ID = APLA_DEVELOPER_ROLE_ID = 2
+GENESIS_CONSENSUS_ROLE_ID = APLA_CONSENSUS_ROLE_ID = 3
+GENESIS_CANDIADATE_FOR_VALIDATORS_ROLE_ID = \
+             APLA_CANDIADATE_FOR_VALIDATORS_ROLE_ID= 4
+GENESIS_VALIDATOR_ROLE_ID = APLA_VALIDATOR_ROLE_ID = 5
+GENESIS_INVESTOR_WITH_VOTING_RIGHTS_ROLE_ID = \
+          APLA_INVESTOR_WITH_VOTING_RIGHTS_ROLE_ID = 6
+GENESIS_DELEGATE_ROLE_ID  = APLA_DELEGATE_ROLE_ID  = 7
+
 def raise_resp_error(resp, do_resp_dump=True):
     logger.debug("type(resp): % resp: %s" % (type(resp), resp))
     try:
@@ -28,12 +39,12 @@ def raise_resp_error(resp, do_resp_dump=True):
     except JSONDecodeError as e:
         has_json = False
     if has_json:
-        msg = resp_json.get('msg', None)
+        msg = str(resp_json.get('msg', None))
         error_id = resp_json.get('error', None)
         logger.debug("error_id: %s" % error_id)
         error = get_error_by_id(error_id, msg=msg)
         if do_resp_dump:
-            msg += ' ::: ' + dump_resp(resp)
+            msg += ' ::: ' + str(dump_resp(resp))
         raise error(msg, error_id, response=resp)
     else:
         if resp.status_code != requests.codes.ok:
@@ -67,6 +78,16 @@ def common_post_request(url, params={}, data={}, headers={}, verify_cert=True,
                  % (url, params, headers, data, result))
     return result
 
+def files_post_request(url, params={}, data={}, headers={}, verify_cert=True,
+                        catch_errmsg=True):
+    resp = requests.post(url, headers=headers, params=params, files=data,
+                         verify=verify_cert)
+    check_resp_error(resp)
+    result = resp.json()
+    logger.debug("url: %s; params: %s; headers: %s; data: %s result: %s" \
+                 % (url, params, headers, data, result))
+    return result
+
 def get_uid(url, verify_cert=True):
     result = common_get_request(url + '/getuid', verify_cert=verify_cert)
     return result['uid'], result['token']
@@ -93,15 +114,15 @@ def sign_or_signtest(url, priv_key, data, sign_fmt='DER', use_signtest=False,
     return signature, pub_key
 
 def login(url, priv_key, uid, token, sign_fmt='DER', use_signtest=False,
-          verify_cert=True, crypto_backend=crypto, sign_tries=1,
-          use_login_prefix=True, pub_key_fmt='04'):
+          verify_cert=True, crypto_backend=crypto, sign_tries=1, role_id=None,
+          use_login_prefix=True, pub_key_fmt='04', ecosystem_id=None):
     if use_login_prefix:
-        data = "LOGIN" + uid
+        s_data = "LOGIN" + uid
     else:
-        data = uid
+        s_data = uid
     result = None
     for i in range(0, sign_tries):
-        signature, pub_key = sign_or_signtest(url, priv_key, data,
+        signature, pub_key = sign_or_signtest(url, priv_key, s_data,
                                               sign_fmt=sign_fmt,
                                               use_signtest=use_signtest,
                                               verify_cert=verify_cert,
@@ -109,11 +130,16 @@ def login(url, priv_key, uid, token, sign_fmt='DER', use_signtest=False,
                                               pub_key_fmt=pub_key_fmt)
         logger.debug("use_signtest: %s pub_key: %s, signature: %s" \
                      % (use_signtest, pub_key, signature)) 
+        data={'pubkey': pub_key, 'signature': signature}
+        if not ecosystem_id is None:
+            data['ecosystem'] = ecosystem_id
+        if not role_id is None:
+            data['role_id'] = role_id
         try:
             result = common_post_request(
                 url + '/login',
                 headers={'Authorization': 'Bearer ' + token},
-                data={'pubkey': pub_key, 'signature': signature},
+                data=data,
                 verify_cert=verify_cert
             )
             result.update({'pub_key': pub_key, 'signature': signature})
@@ -198,7 +224,7 @@ def get_tx_status(url, tx_hash, token, verify_cert=True):
 
 
 def wait_tx_status(url, tx_hash, token, timeout_secs=100, max_tries=100,
-                   gap_secs=1, verify_cert=True):
+                   gap_secs=1, show_indicator=True, verify_cert=True):
 
     logger.debug("gap_secs: %d timeout_secs: %d max_tries: %d" %(gap_secs,
         timeout_secs, max_tries))
@@ -206,6 +232,8 @@ def wait_tx_status(url, tx_hash, token, timeout_secs=100, max_tries=100,
     result = None
     cnt=1
     while True:
+        if show_indicator:
+            print("Waiting (%d seconds) for the completion of the transaction (try %d/%d) ..." % (timeout_secs, cnt, max_tries))
         logger.debug("try %d", cnt)
         no_block_id = False
         try:
@@ -264,7 +292,7 @@ def get_block_data(url, block_id, verify_cert=True):
 
 
 def get_detailed_blocks_data(url, block_id, count=None, verify_cert=True):
-    params = {'block_id': block_id, 'verify_cert': verify_cert}
+    params = {'block_id': block_id}
     if count:
         params.update(count=count)
     return common_get_request(url + '/detailed_blocks', params=params,
