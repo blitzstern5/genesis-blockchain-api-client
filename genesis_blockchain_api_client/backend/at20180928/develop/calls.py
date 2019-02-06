@@ -35,7 +35,7 @@ def get_contract_info(url, token, name, verify_cert=True):
 
 def send_tx(url, token, data='', verify_cert=True, send_pub_key=True):
     return files_post_request(
-        url + '/sendTx/',
+        url + '/sendTx',
         headers={'Authorization': 'Bearer ' + token},
         data=data,
         verify_cert=verify_cert

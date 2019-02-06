@@ -74,7 +74,7 @@ def my_teardown():
 def check_get_contract_info_result(result):
     assert 'id' in result and is_number(result['id'])
     assert 'state' in result and is_number(result['state'])
-    assert 'active' in result
+    #assert 'active' in result
     assert 'fields' in result and type(result['fields']) == list
 
 def get_priv_key_from_env(node_ind):
@@ -163,7 +163,28 @@ def NOtest_get_pub_key_from_env():
             print("Node %d NodePublicKey isn't set" % node_ind)
 
 @with_setup(my_setup, my_teardown)
-def NOtest_get_contract_info():
+def NOtest_get_uid():
+    uid, token = get_uid(api_root_url)
+    assert uid
+    assert token
+
+@with_setup(my_setup, my_teardown)
+def test_login():
+    uid, token = get_uid(api_root_url)
+    assert uid
+    assert token
+    uid, token = get_uid(api_root_url)
+    priv_key = get_priv_key_from_env(1)
+    assert priv_key
+    l_result = login(api_root_url, priv_key, uid, token, sign_fmt=sign_fmt,
+                       use_signtest=use_signtest, crypto_backend=crypto,
+                       use_login_prefix=use_login_prefix,
+                       pub_key_fmt=pub_key_fmt)
+    assert l_result
+    assert type(l_result) == dict
+
+@with_setup(my_setup, my_teardown)
+def test_get_contract_info():
     uid, token = get_uid(api_root_url)
     priv_key = get_priv_key_from_env(1)
     l_result = login(api_root_url, priv_key, uid, token, sign_fmt=sign_fmt,
@@ -173,9 +194,9 @@ def NOtest_get_contract_info():
     result = get_contract_info(api_root_url, l_result['token'],
                                name='MainCondition') 
     check_get_contract_info_result(result)
-    result = get_contract_info(api_root_url, l_result['token'],
-                               name='EditPage') 
-    check_get_contract_info_result(result)
+    #result = get_contract_info(api_root_url, l_result['token'],
+    #                           name='EditPage') 
+    #check_get_contract_info_result(result)
 
 @with_setup(my_setup, my_teardown)
 def NOtest_send_tx():
