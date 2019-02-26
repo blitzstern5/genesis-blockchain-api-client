@@ -69,7 +69,7 @@ def get_new_users_args():
             if hasattr(args, 'amount'): 
                 params[_pub_key]['amount'] = str(args.amount[i][0]).rstrip()
             i += 1
-    return args.api_url, args.priv_key, params, args.timeout_secs,
+    return args.api_url, args.priv_key, params, args.timeout_secs, \
            args.max_tries
 
 if __name__ == '__main__':

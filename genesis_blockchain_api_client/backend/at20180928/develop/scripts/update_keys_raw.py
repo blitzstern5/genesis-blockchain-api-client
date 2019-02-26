@@ -71,7 +71,7 @@ def get_update_keys_args():
             params[key_id[0]] = {'pub_key': args.pub_key[i][0],
                                  'amount': args.amount[i][0]}
             i += 1
-    return args.api_url, args.priv_key, params, args.timeout_secs,
+    return args.api_url, args.priv_key, params, args.timeout_secs, \
            args.max_tries
 
 if __name__ == '__main__':

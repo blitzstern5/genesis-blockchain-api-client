@@ -82,7 +82,7 @@ def get_update_full_nodes_args():
                 'public_key': args.node_pub_key[i][0],
             })
             i += 1
-    return args.call_api_url, args.call_priv_key, json.dumps(params),
+    return args.call_api_url, args.call_priv_key, json.dumps(params), \
            args.timeout_secs, args.max_tries
 
 if __name__ == '__main__':

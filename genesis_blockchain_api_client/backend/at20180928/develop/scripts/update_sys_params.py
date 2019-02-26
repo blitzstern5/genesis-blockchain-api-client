@@ -110,7 +110,7 @@ def get_update_sys_params_args():
         for name in args.name:
             params[name[0]] = args.value[i][0]
             i += 1
-    return args.api_url, args.priv_key, params, args.timeout_secs,
+    return args.api_url, args.priv_key, params, args.timeout_secs, \
            args.max_tries
 
 if __name__ == '__main__':
