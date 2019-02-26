@@ -29,7 +29,8 @@ for option_name, option_value in version_to_options(backend_version).items():
 def update_sys_param(url, priv_key, name, value,
                      use_signtest=use_signtest, crypto_backend=crypto,
                      use_login_prefix=use_login_prefix,
-                     pub_key_fmt=pub_key_fmt):
+                     pub_key_fmt=pub_key_fmt, timeout_secs=40,
+                     max_tries=40):
     uid, uid_token = get_uid(url)
     l_result = login(url,
                      priv_key, uid, uid_token,
@@ -40,13 +41,14 @@ def update_sys_param(url, priv_key, name, value,
 
     _update_sys_param(url, priv_key, l_result['token'],
                       name, value, ecosystem_id=1,
-                      verify_cert=True, wait_tx=True, timeout_secs=20,
-                      max_tries=20, gap_secs=1)
+                      verify_cert=True, wait_tx=True, timeout_secs=timeout_secs,
+                      max_tries=max_tries, gap_secs=1)
 
 def update_sys_params(url, priv_key, name_value_map,
                      use_signtest=use_signtest, crypto_backend=crypto,
                      use_login_prefix=use_login_prefix,
-                     pub_key_fmt=pub_key_fmt):
+                     pub_key_fmt=pub_key_fmt, timeout_secs=40,
+                     max_tries=40):
     uid, uid_token = get_uid(url)
     l_result = login(url,
                      priv_key, uid, uid_token,
@@ -57,8 +59,8 @@ def update_sys_params(url, priv_key, name_value_map,
 
     _update_sys_params(url, priv_key, l_result['token'],
                       name_value_map, ecosystem_id=1,
-                      verify_cert=True, wait_tx=True, timeout_secs=20,
-                      max_tries=20, gap_secs=1)
+                      verify_cert=True, wait_tx=True, timeout_secs=timeout_secs,
+                      max_tries=max_tries, gap_secs=1)
 
 
 def get_update_sys_param_args():
@@ -71,6 +73,10 @@ def get_update_sys_param_args():
                         help='System Parameter Name')
     parser.add_argument('-v', '--value',
                         help='System Parameter Value')
+    parser.add_argument('--timeout-secs', default=40,
+                        help='Timeout in seconds')
+    parser.add_argument('--max-tries', default=40,
+                        help='Maximum numbers of tries')
     parser.add_argument('--debug', dest='debug', action='store_true',
                         help='Run in debug mode')
     parser.add_argument('--no-debug', dest='debug', action='store_false',
@@ -87,6 +93,10 @@ def get_update_sys_params_args():
                         required=True, help='System Parameter Name')
     parser.add_argument('-v', '--value', action='append', nargs=1,
                         required=True, help='System Parameter Value')
+    parser.add_argument('--timeout-secs', default=40,
+                        help='Timeout in seconds')
+    parser.add_argument('--max-tries', default=40,
+                        help='Maximum numbers of tries')
     parser.add_argument('--debug', dest='debug', action='store_true',
                         help='Run in debug mode')
     parser.add_argument('--no-debug', dest='debug', action='store_false',
@@ -100,8 +110,11 @@ def get_update_sys_params_args():
         for name in args.name:
             params[name[0]] = args.value[i][0]
             i += 1
-    return args.api_url, args.priv_key, params
+    return args.api_url, args.priv_key, params, args.timeout_secs,
+           args.max_tries
 
 if __name__ == '__main__':
-    api_url, priv_key, params = get_update_sys_params_args()
-    update_sys_params(api_url, priv_key, params)
+    api_url, priv_key, params, timeout_secs, max_tries \
+            = get_update_sys_params_args()
+    update_sys_params(api_url, priv_key, params, timeout_secs=timeout_secs,
+                      max_tries=max_tries)

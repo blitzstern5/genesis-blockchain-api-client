@@ -28,7 +28,8 @@ for option_name, option_value in version_to_options(backend_version).items():
 def update_sys_param(url, priv_key, name, value,
                      use_signtest=use_signtest, crypto_backend=crypto,
                      use_login_prefix=use_login_prefix,
-                     pub_key_fmt=pub_key_fmt):
+                     pub_key_fmt=pub_key_fmt, timeout_secs=40,
+                     max_tries=40):
     uid, uid_token = get_uid(url)
     l_result = login(url,
                      priv_key, uid, uid_token,
@@ -39,8 +40,8 @@ def update_sys_param(url, priv_key, name, value,
 
     _update_sys_param(url, priv_key, l_result['token'],
                       name, value, ecosystem_id=1,
-                      verify_cert=True, wait_tx=True, timeout_secs=20,
-                      max_tries=20, gap_secs=1)
+                      verify_cert=True, wait_tx=True, timeout_secs=timeout_secs,
+                      max_tries=max_tries, gap_secs=1)
 
 def get_update_full_nodes_args():
     parser = argparse.ArgumentParser()
@@ -56,6 +57,10 @@ def get_update_full_nodes_args():
                         required=True, help='Node key ID')
     parser.add_argument('--node-pub-key', action='append', nargs=1,
                         required=True, help='Node public key')
+    parser.add_argument('--timeout-secs', default=40,
+                        help='Timeout in seconds')
+    parser.add_argument('--max-tries', default=40,
+                        help='Maximum numbers of tries')
     parser.add_argument('--debug', dest='debug', action='store_true',
                         help='Run in debug mode')
     parser.add_argument('--no-debug', dest='debug', action='store_false',
@@ -77,8 +82,11 @@ def get_update_full_nodes_args():
                 'public_key': args.node_pub_key[i][0],
             })
             i += 1
-    return args.call_api_url, args.call_priv_key, json.dumps(params)
+    return args.call_api_url, args.call_priv_key, json.dumps(params),
+           args.timeout_secs, args.max_tries
 
 if __name__ == '__main__':
-    api_url, priv_key, full_nodes_str = get_update_full_nodes_args()
-    update_sys_param(api_url, priv_key, 'full_nodes', full_nodes_str)
+    api_url, priv_key, full_nodes_str, timeout_secs, max_tries \
+            = get_update_full_nodes_args()
+    update_sys_param(api_url, priv_key, 'full_nodes', full_nodes_str, timeout_secs=timeout_secs, max_tries=max_tries)
+

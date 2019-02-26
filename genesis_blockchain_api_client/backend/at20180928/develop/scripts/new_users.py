@@ -48,6 +48,10 @@ def get_new_users_args():
     parser.add_argument('--pub-key', action='append', nargs=1, required=True,
                         help='Public Key')
     parser.add_argument('--amount', action='append', nargs=1, help='Amount')
+    parser.add_argument('--timeout-secs', default=150,
+                        help='Timeout in seconds')
+    parser.add_argument('--max-tries', default=150,
+                        help='Maximum numbers of tries')
     parser.add_argument('--debug', dest='debug', action='store_true',
                         help='Run in debug mode')
     parser.add_argument('--no-debug', dest='debug', action='store_false',
@@ -65,8 +69,10 @@ def get_new_users_args():
             if hasattr(args, 'amount'): 
                 params[_pub_key]['amount'] = str(args.amount[i][0]).rstrip()
             i += 1
-    return args.api_url, args.priv_key, params
+    return args.api_url, args.priv_key, params, args.timeout_secs,
+           args.max_tries
 
 if __name__ == '__main__':
-    api_url, priv_key, params = get_update_keys_args()
-    update_keys_raw(api_url, priv_key, params)
+    api_url, priv_key, params, timeout_secs, max_tries = get_update_keys_args()
+    update_keys_raw(api_url, priv_key, params, timeout_secs=timeout_secs,
+                    max_tries=max_tries)
