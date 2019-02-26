@@ -73,9 +73,9 @@ def get_update_sys_param_args():
                         help='System Parameter Name')
     parser.add_argument('-v', '--value',
                         help='System Parameter Value')
-    parser.add_argument('--timeout-secs', default=40,
+    parser.add_argument('--timeout-secs', default=40, type=int,
                         help='Timeout in seconds')
-    parser.add_argument('--max-tries', default=40,
+    parser.add_argument('--max-tries', default=40, type=int,
                         help='Maximum numbers of tries')
     parser.add_argument('--debug', dest='debug', action='store_true',
                         help='Run in debug mode')
@@ -93,9 +93,9 @@ def get_update_sys_params_args():
                         required=True, help='System Parameter Name')
     parser.add_argument('-v', '--value', action='append', nargs=1,
                         required=True, help='System Parameter Value')
-    parser.add_argument('--timeout-secs', default=40,
+    parser.add_argument('--timeout-secs', default=40, type=int,
                         help='Timeout in seconds')
-    parser.add_argument('--max-tries', default=40,
+    parser.add_argument('--max-tries', default=40, type=int,
                         help='Maximum numbers of tries')
     parser.add_argument('--debug', dest='debug', action='store_true',
                         help='Run in debug mode')
