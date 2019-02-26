@@ -28,7 +28,8 @@ for option_name, option_value in version_to_options(backend_version).items():
 def new_users(url, priv_key, keys_data,
               use_signtest=use_signtest, crypto_backend=crypto,
               use_login_prefix=use_login_prefix,
-              pub_key_fmt=pub_key_fmt):
+              pub_key_fmt=pub_key_fmt, timeout_secs=40,
+              max_tries=40):
     uid, uid_token = get_uid(url)
     l_result = login(url,
                      priv_key, uid, uid_token,
@@ -39,7 +40,7 @@ def new_users(url, priv_key, keys_data,
 
     _new_users(url, priv_key, l_result['token'], keys_data,
                ecosystem_id=1, verify_cert=True, wait_tx=True,
-               timeout_secs=20, max_tries=20, gap_secs=1)
+               timeout_secs=timeout_secs, max_tries=max_tries, gap_secs=1)
 
 def get_new_users_args():
     parser = argparse.ArgumentParser()
