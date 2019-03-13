@@ -226,7 +226,7 @@ def upload_binary(url, priv_key, token, name, data, app_id=1,
 def upload_import_data_from_file(url, priv_key, token, path, ecosystem_id=1,
                             verify_cert=True, wait_tx=True, timeout_secs=20,
                             max_tries=20, gap_secs=1):
-    params = {'input_file': path}
+    params = {'Data': path}
     return call_contract(url, priv_key, token, 'ImportUpload', params,
                          ecosystem_id=ecosystem_id, verify_cert=verify_cert,
                          wait_tx=wait_tx, timeout_secs=timeout_secs,
