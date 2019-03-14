@@ -65,6 +65,7 @@ def get_update_keys_args():
     params = {}
     if hasattr(args, 'key_id') and hasattr(args, 'pub_key') \
             and hasattr(args, 'amount') \
+            and args.key_id and args.pub_key and args.amount \
             and len(args.key_id) == len(args.pub_key) \
             and len(args.key_id) == len(args.amount):
         i = 0

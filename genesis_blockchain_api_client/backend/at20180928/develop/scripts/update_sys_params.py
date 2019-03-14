@@ -105,7 +105,8 @@ def get_update_sys_params_args():
     args = parser.parse_args()
     params = {}
     if hasattr(args, 'name') and hasattr(args, 'value') \
-            and len(args.name) == len(args.value):
+        and args.name and args.value \
+        and len(args.name) == len(args.value):
         i = 0
         for name in args.name:
             params[name[0]] = args.value[i][0]

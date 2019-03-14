@@ -70,6 +70,8 @@ def get_update_full_nodes_args():
     params = []
     if hasattr(args, 'node_api_url') and hasattr(args, 'node_tcp_addr') \
             and hasattr(args, 'node_key_id') and hasattr(args, 'node_pub_key') \
+            and args.node_api_url and args.node_tcp_addr \
+            and args.node_key_id and args.node_pub_key \
             and len(args.node_api_url) == len(args.node_tcp_addr) \
             and len(args.node_api_url) == len(args.node_key_id) \
             and len(args.node_key_id) == len(args.node_pub_key):
