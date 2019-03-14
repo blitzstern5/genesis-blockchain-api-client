@@ -1,3 +1,8 @@
+# v0.2.7 (2019-Mar-14 21:03)
+
+* Add additional args checking
+* Add call_contract script
+
 # v0.2.6 (2019-Mar-13 16:05)
 
 * Change variable name from input_file to Data in ImportUpload contract
