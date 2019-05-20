@@ -115,9 +115,13 @@ def sign_or_signtest(url, priv_key, data, sign_fmt='DER', use_signtest=False,
 
 def login(url, priv_key, uid, token, sign_fmt='DER', use_signtest=False,
           verify_cert=True, crypto_backend=crypto, sign_tries=1, role_id=None,
-          use_login_prefix=True, pub_key_fmt='04', ecosystem_id=None):
+          use_login_prefix=True, pub_key_fmt='04', ecosystem_id=None,
+          network_id=None):
     if use_login_prefix:
-        s_data = "LOGIN" + uid
+        if network_id:
+            s_data = "LOGIN" + network_id + uid
+        else:
+            s_data = "LOGIN" + uid
     else:
         s_data = uid
     result = None

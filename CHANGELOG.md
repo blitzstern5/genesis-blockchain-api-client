@@ -1,3 +1,7 @@
+# v0.3.0 (2019-May-20 04:55)
+
+* Add network_id
+
 # v0.2.7 (2019-Mar-14 21:03)
 
 * Add additional args checking
