@@ -203,7 +203,8 @@ def get_tx_status(url, tx_hash, token, verify_cert=True):
     logger.debug("    requesting /txstatus/%s ..." % tx_hash)
     result = common_get_request(
         url + '/txstatus/' + tx_hash,
-        headers={'Authorization': 'Bearer ' + token}
+        headers={'Authorization': 'Bearer ' + token},
+        verify_cert=verify_cert
     )
     logger.debug("result: %s" % result)
     if 'errmsg' in result:
