@@ -60,7 +60,8 @@ def get_tx_status(url, tx_hashes, token, verify_cert=True):
     g_result = common_post_request(
         url + '/txstatus',
         headers={'Authorization': 'Bearer ' + token},
-        params={'data': json.dumps({'hashes': _tx_hashes})}
+        params={'data': json.dumps({'hashes': _tx_hashes})},
+        verify_cert=verify_cert
     )
     results = {}
     for h in _tx_hashes:
