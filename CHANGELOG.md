@@ -1,3 +1,7 @@
+# v0.3.1 (2019-Jun-21 13:59)
+
+* Add missing verify_cert parameter
+
 # v0.3.0 (2019-May-20 04:55)
 
 * Add network_id
