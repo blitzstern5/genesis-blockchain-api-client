@@ -1,6 +1,8 @@
 # v0.4.0 (2019-Jul-16 03:29)
 
-
+* Replace public_key_to_address with public_key_to_key_id
+* Change tools version to v0.4.0
+* Freeze requirements packages versions
 
 # v0.3.1 (2019-Jun-21 13:59)
 
