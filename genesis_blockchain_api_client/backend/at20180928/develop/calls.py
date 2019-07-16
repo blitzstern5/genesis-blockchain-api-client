@@ -8,7 +8,7 @@ from puremagic.main import PureError
 
 from genesis_blockchain_tools.contract import Contract
 from genesis_blockchain_tools.utils import find_mime_type_recursive
-from genesis_blockchain_tools.crypto.genesis import public_key_to_address
+from genesis_blockchain_tools.crypto.genesis import public_key_to_key_id
 
 from ....utils import is_string, is_hash_string
 from ....calls import (
@@ -370,7 +370,7 @@ def add_node_by_voting(url, priv_key, token, tcp_address, api_address, pub_key,
                        verify_cert=True, wait_tx=True, timeout_secs=20,
                        max_tries=20, gap_secs=1):
     if not key_id:
-        key_id = public_key_to_address(bytes.fromhex(pub_key))
+        key_id = public_key_to_key_id(bytes.fromhex(pub_key))
     params = {'TcpAddress': tcp_address, 'ApiAddress': api_address,
               'KeyId': key_id, 'PubKey': pub_key, 'Duration': duration}
     return call_contract(url, priv_key, token, 'VotingNodeAdd', params,

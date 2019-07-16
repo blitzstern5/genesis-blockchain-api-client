@@ -8,7 +8,9 @@ import tempfile
 from nose import with_setup
 
 from genesis_blockchain_tools.contract import Contract
-from genesis_blockchain_tools.crypto.genesis import public_key_to_address
+from genesis_blockchain_tools.crypto.genesis import (
+    public_key_to_key_id,
+)
 from genesis_blockchain_tools.crypto.backend import (
     import_crypto_by_backend,
 )
@@ -644,11 +646,11 @@ def NOtest_assign_role():
                      use_login_prefix=use_login_prefix,
                      pub_key_fmt=pub_key_fmt)
     pub_key = bytes.fromhex(crypto.get_public_key(priv_key))
-    account = public_key_to_address(pub_key)
+    key_id = public_key_to_key_id(pub_key)
     role_id = APLA_CONSENSUS_ROLE_ID
 
     w_result = assign_role(api_root_url, priv_key, l_result['token'],
-                           account, role_id, verify_cert=True)
+                           key_id, role_id, verify_cert=True)
     check_wait_tx_status_result(w_result)
 
 @with_setup(my_setup, my_teardown)
@@ -660,9 +662,9 @@ def NOtest_assign_apla_consensus_role():
                      use_login_prefix=use_login_prefix,
                      pub_key_fmt=pub_key_fmt)
     pub_key = bytes.fromhex(crypto.get_public_key(priv_key))
-    account = public_key_to_address(pub_key)
+    key_id = public_key_to_key_id(pub_key)
     w_result = assign_apla_consensus_role(api_root_url, priv_key,
-                                          l_result['token'], account,
+                                          l_result['token'], key_id,
                                           verify_cert=True)
     check_wait_tx_status_result(w_result)
 

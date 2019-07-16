@@ -6,7 +6,6 @@ import argparse
 from genesis_blockchain_api_client.utils import is_number
 
 from genesis_blockchain_tools.contract import Contract
-from genesis_blockchain_tools.crypto.genesis import public_key_to_address
 from genesis_blockchain_tools.crypto.backend import (
     import_crypto_by_backend,
 )
