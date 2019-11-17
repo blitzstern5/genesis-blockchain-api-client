@@ -7,7 +7,7 @@ from .calls import (
     get_tx_status, wait_tx_status, get_max_block_id, get_blocks_data,
     get_block_data, get_version, get_block, get_blocks, get_block_metadata,
     get_detailed_block_data, get_detailed_blocks_data,
-    get_detailed_block, get_detailed_blocks,
+    get_detailed_block, get_detailed_blocks, get_network_info
 )
 
 from .backend.versions import version_to_options, get_latest_version
@@ -34,6 +34,8 @@ class Session:
 
         self.max_sign_tries = kwargs.get('max_sign_tries', 1)
         self.use_login_prefix = kwargs.get('use_login_prefix', True)
+        self.network_id = kwargs.get('network_id')
+        self.auto_network_id = kwargs.get('auto_network_id', True)
 
         #timeout_secs=10, max_tries=100, gap_secs=0.05
         self.wait_tx_timeout_secs = kwargs.get('wait_tx_timeout_secs', 10)
@@ -46,6 +48,7 @@ class Session:
         self.p_result = None
         self.c_result = None
         self.tx_status = None
+        self.network_info = None
 
     def set_backend_version(self, backend_version):
         if not backend_version:
@@ -57,6 +60,11 @@ class Session:
     def get_uid(self):
         self.uid, self.token = get_uid(self.api_url,
                                        verify_cert=self.verify_cert)
+
+    def get_network_info(self):
+        self.network_info = get_network_info(self.api_url,
+                                             verify_cert=self.verify_cert)
+        return self.network_info
 
     def _sign_or_signtest(self, data):
         return sign_or_signtest(self.api_url, self.priv_key, data,
@@ -76,7 +84,9 @@ class Session:
                                   crypto_backend=self.crypto_backend,
                                   sign_tries=self.max_sign_tries,
                                   use_login_prefix=self.use_login_prefix,
-                                  pub_key_fmt=self.pub_key_fmt)
+                                  pub_key_fmt=self.pub_key_fmt,
+                                  network_id=self.network_id,
+                                  auto_network_info=self.auto_network_info)
 
     def prepare_tx(self, name=None, data=None):
         self.contract_name = name

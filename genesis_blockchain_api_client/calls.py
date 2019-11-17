@@ -92,6 +92,14 @@ def get_uid(url, verify_cert=True):
     result = common_get_request(url + '/getuid', verify_cert=verify_cert)
     return result['uid'], result['token']
 
+def get_network_info(url, verify_cert=True):
+    result = common_get_request(url + '/network', verify_cert=verify_cert)
+    if 'network_ud' in result:
+        network_id = result['network_ud']
+        result.pop('network_ud')
+        result['network_id'] = network_id
+    return result
+
 def signtest(url, forsign, priv_key, verify_cert=True):
     result = common_post_request(
         url + '/signtest',
@@ -116,7 +124,14 @@ def sign_or_signtest(url, priv_key, data, sign_fmt='DER', use_signtest=False,
 def login(url, priv_key, uid, token, sign_fmt='DER', use_signtest=False,
           verify_cert=True, crypto_backend=crypto, sign_tries=1, role_id=None,
           use_login_prefix=True, pub_key_fmt='04', ecosystem_id=None,
-          network_id=None):
+          network_id=None, auto_network_id=True):
+    if auto_network_id:
+        use_login_prefix = True
+        network_info = get_network_info(url, verify_cert=verify_cert)
+        if 'network_id' in network_info:
+            network_id = network_info['network_id']
+        else:
+            network_id = None
     if use_login_prefix:
         if network_id:
             s_data = "LOGIN" + network_id + uid
