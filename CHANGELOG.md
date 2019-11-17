@@ -1,3 +1,7 @@
+# v0.4.1 (2019-Nov-17 23:38)
+
+* Update requirements
+
 # v0.4.0 (2019-Jul-16 03:29)
 
 * Replace public_key_to_address with public_key_to_key_id
