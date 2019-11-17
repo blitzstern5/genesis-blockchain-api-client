@@ -86,7 +86,7 @@ class Session:
                                   use_login_prefix=self.use_login_prefix,
                                   pub_key_fmt=self.pub_key_fmt,
                                   network_id=self.network_id,
-                                  auto_network_info=self.auto_network_info)
+                                  auto_network_id=self.auto_network_id)
 
     def prepare_tx(self, name=None, data=None):
         self.contract_name = name
