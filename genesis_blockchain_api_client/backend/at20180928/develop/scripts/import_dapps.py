@@ -20,14 +20,15 @@ from genesis_blockchain_api_client.backend.versions import (
     version_to_options, get_latest_version
 )
 
-crypto = import_crypto_by_backend('cryptography')
+crypto_backend = import_crypto_by_backend('cryptography')
 
 backend_version = get_latest_version()
 for option_name, option_value in version_to_options(backend_version).items():
     globals()[option_name] = option_value
 
 def import_dapp_from_file(url, priv_key, path,
-                    use_signtest=use_signtest, crypto_backend=crypto,
+                    use_signtest=use_signtest,
+                    crypto_backend=crypto_backend,
                     use_login_prefix=use_login_prefix,
                     pub_key_fmt=pub_key_fmt, timeout_secs=150,
                     max_tries=150):
@@ -35,7 +36,8 @@ def import_dapp_from_file(url, priv_key, path,
     l_result = login(url,
                      priv_key, uid, uid_token,
                      sign_fmt=sign_fmt,
-                     use_signtest=use_signtest, crypto_backend=crypto,
+                     use_signtest=use_signtest,
+                     crypto_backend=crypto_backend,
                      use_login_prefix=use_login_prefix,
                      pub_key_fmt=pub_key_fmt)
 

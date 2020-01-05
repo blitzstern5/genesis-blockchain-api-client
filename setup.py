@@ -2,7 +2,7 @@ import os
 
 from setuptools import setup, find_packages
 
-__VERSION__ = '0.4.1'
+__VERSION__ = '0.4.2'
 
 here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'README.md')) as f:
@@ -35,7 +35,7 @@ setup(
         'PyYAML>=5.1.1',
         'ruamel.yaml>=0.15.99',
         'puremagic>=1.5',
-        'genesis-blockchain-tools>=0.4.0',
+        'genesis-blockchain-tools>=0.4.1',
     ],
     dependency_links=[
         'git+https://github.com/blitzstern5/genesis-blockchain-tools#egg=genesis-blockchain-tools',

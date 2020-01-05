@@ -23,7 +23,7 @@ from genesis_blockchain_api_client.backend.versions import (
     version_to_options, get_latest_version
 )
 
-crypto = import_crypto_by_backend('cryptography')
+crypto_backend = import_crypto_by_backend('cryptography')
 
 backend_version = get_latest_version()
 for option_name, option_value in version_to_options(backend_version).items():
@@ -58,7 +58,7 @@ def get_vars_from_env(templates_map, max_node_ind, min_node_ind=1):
 def update_full_nodes_by_voting(conf, url=None,
                                 sign_fmt=sign_fmt,
                                 use_signtest=use_signtest,
-                                crypto_backend=crypto,
+                                crypto_backend=crypto_backend,
                                 use_login_prefix=use_login_prefix,
                                 pub_key_fmt=pub_key_fmt):
     """
@@ -95,7 +95,8 @@ def update_full_nodes_by_voting(conf, url=None,
                          priv_key, uid, uid_token,
                          role_id=role_id,
                          sign_fmt=sign_fmt,
-                         use_signtest=use_signtest, crypto_backend=crypto,
+                         use_signtest=use_signtest,
+                         crypto_backend=crypto_backend,
                          use_login_prefix=use_login_prefix,
                          pub_key_fmt=pub_key_fmt)
         return {
