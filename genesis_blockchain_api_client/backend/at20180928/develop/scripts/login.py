@@ -59,6 +59,5 @@ def get_login_args():
 if __name__ == '__main__':
     pass
     api_url, priv_key, ecosystem_id = get_login_args()
-    print("api_url: %s priv_key: %s" % (api_url, priv_key))
     result = login(api_url, priv_key, ecosystem_id=ecosystem_id)
     print("token: %s" % result['token'])
